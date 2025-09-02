@@ -1,0 +1,62 @@
+<div>
+  <div>
+    <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+  </div>
+  <form *ngIf="!isLoading" [formGroup]="signupForm" (ngSubmit)="_onSubmit()">
+    <div>
+      <label for="username">Username:</label>
+      <input type="text" id="username" formControlName="username" />
+    </div>
+    <div>
+      <span *ngIf="!usernameAvailable" class="error"
+        >Username is not available, please pick a different username.</span
+      >
+    </div>
+
+    <div>
+      <label for="password">Password:</label>
+      <input type="password" id="password" formControlName="password" />
+    </div>
+
+    <div>
+      <label for="dateOfBirth">Date Of Birth:</label>
+      <input
+        type="datetime-local"
+        id="dateOfBirth"
+        formControlName="dateOfBirth"
+      />
+      <div>
+        <span
+          *ngIf="signupForm.get('dateOfBirth')?.hasError('evenMonth')"
+          class="error"
+        >
+          Birth month cannot be even
+        </span>
+      </div>
+    </div>
+
+    <div>
+      <label for="weight">Weight (kg):</label>
+      <input type="" id="weight" formControlName="weight" />
+    </div>
+
+    <div>
+      <label for="address">Address:</label>
+      <select id="address" formControlName="address">
+        <option value="">--Select address--</option>
+        <option *ngFor="let addr of addresses" [value]="addr">
+          {{ addr }}
+        </option>
+      </select>
+    </div>
+
+    <button type="submit" [disabled]="signupForm.invalid">Submit</button>
+
+    <div>
+      <label>
+        Already have a user?
+        <a routerLink="/login">Click Here to log in!</a>
+      </label>
+    </div>
+  </form>
+</div>

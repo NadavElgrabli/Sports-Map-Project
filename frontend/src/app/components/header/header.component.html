@@ -1,0 +1,17 @@
+<header>
+  <nav class="header-container">
+    <ul>
+      <li><a routerLink="/">Home</a></li>
+      <li *ngIf="isAuthenticated"><a routerLink="map">Map</a></li>
+    </ul>
+
+    <div class="center-menu" *ngIf="isAuthenticated">
+      <span>Welcome, {{ username }}!</span>
+    </div>
+
+    <ul>
+      <li *ngIf="!isAuthenticated"><a routerLink="login">Sign In</a></li>
+      <li *ngIf="isAuthenticated"><a (click)="_onLogout()">Logout</a></li>
+    </ul>
+  </nav>
+</header>
