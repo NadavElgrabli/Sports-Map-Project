@@ -1,3 +1,8 @@
+export interface Location {
+  latitude: number;
+  longitude: number;
+}
+
 export class User {
   constructor(
     public id: number,
@@ -7,7 +12,9 @@ export class User {
     public weight: number,
     public address: string,
     public expiresIn: number,
-    public expirationDate: Date
+    public expirationDate: Date,
+    public currentLocation: Location = { latitude: 0, longitude: 0 },
+    public friends: User[] = []
   ) {}
 
   get isActive() {

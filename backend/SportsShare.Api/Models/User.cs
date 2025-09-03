@@ -9,12 +9,10 @@ namespace SportsShare.Api.Models
         public double Weight { get; set; }
         public string? Address { get; set; }
 
-        // public Location CurrentLocation { get; set; } 
-        // public List<User> Friends { get; set; } 
+        // New fields
+        public Location CurrentLocation { get; set; } = new Location();
+
+        // Friends as full User objects
+        public List<User> Friends { get; set; } = new List<User>();
     }
 }
-
-
-
-
-

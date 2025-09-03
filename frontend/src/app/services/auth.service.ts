@@ -1,29 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Subject, tap } from 'rxjs';
+import { BehaviorSubject, tap } from 'rxjs';
 import { User } from '../models/user.model';
 import { Router } from '@angular/router';
-
-interface SignUpResponseData {
-  id: number;
-  username: string;
-  password: string;
-  dateOfBirth: string;
-  weight: number;
-  address: string;
-}
-
-interface LoginResponseData {
-  expiresIn: number;
-  user: {
-    id: number;
-    username: string;
-    password: string;
-    dateOfBirth: string;
-    weight: number;
-    address: string;
-  };
-}
+import {
+  SignUpResponseData,
+  LoginResponseData,
+} from '../interfaces/auth.interface';
 
 @Injectable()
 export class AuthService {
@@ -41,21 +24,15 @@ export class AuthService {
   ) {
     return this.http.post<SignUpResponseData>(
       'http://localhost:5202/api/users/signup',
-      {
-        username: username,
-        password: password,
-        dateOfBirth: dateOfBirth,
-        weight: weight,
-        address: address,
-      }
+      { username, password, dateOfBirth, weight, address }
     );
   }
 
   login(username: string, password: string) {
     return this.http
       .post<LoginResponseData>('http://localhost:5202/api/users/login', {
-        username: username,
-        password: password,
+        username,
+        password,
       })
       .pipe(
         tap((resData) => {
@@ -70,7 +47,9 @@ export class AuthService {
             resData.user.weight,
             resData.user.address,
             resData.expiresIn,
-            expirationDate
+            expirationDate,
+            resData.user.currentLocation,
+            resData.user.friends
           );
 
           this.user.next(loggedUser);
@@ -81,17 +60,7 @@ export class AuthService {
   }
 
   autoLogin() {
-    const userData: {
-      id: number;
-      username: string;
-      password: string;
-      dateOfBirth: string;
-      weight: number;
-      address: string;
-      expiresIn: number;
-      expirationDate: string;
-    } = JSON.parse(localStorage.getItem('userData')!);
-
+    const userData: any = JSON.parse(localStorage.getItem('userData')!);
     if (!userData) return;
 
     const loadedUser = new User(
@@ -102,7 +71,9 @@ export class AuthService {
       userData.weight,
       userData.address,
       userData.expiresIn,
-      new Date(userData.expirationDate)
+      new Date(userData.expirationDate),
+      userData.currentLocation,
+      userData.friends
     );
 
     if (loadedUser.isActive) {
@@ -116,18 +87,17 @@ export class AuthService {
   }
 
   autoLogout(expirationDuration: number) {
-    this.tokenExpirationTimer = setTimeout(() => {
-      this.logout();
-    }, expirationDuration);
+    this.tokenExpirationTimer = setTimeout(
+      () => this.logout(),
+      expirationDuration
+    );
   }
 
   logout() {
-    this.user.next(null as any);
+    this.user.next(null);
     this.router.navigate(['login']);
     localStorage.removeItem('userData');
-    if (this.tokenExpirationTimer) {
-      clearTimeout(this.tokenExpirationTimer);
-    }
+    if (this.tokenExpirationTimer) clearTimeout(this.tokenExpirationTimer);
     this.tokenExpirationTimer = null;
   }
 }

@@ -64,7 +64,7 @@ export class SignupFormComponent {
       .signup(username, password, dateOfBirth, weight, address)
       .subscribe(
         (responseData) => {
-          console.log(responseData);
+          // console.log(responseData);
           this.isLoading = false;
           this.router.navigate(['home']);
         },

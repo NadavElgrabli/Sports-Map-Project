@@ -1,0 +1,23 @@
+.map-container {
+  width: 50%;
+  height: 500px;
+}
+
+:host ::ng-deep .marker-logged-in {
+  width: 10px;
+  height: 10px;
+  background-color: blue;
+  border-radius: 50%;
+  border: 2px solid white;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+}
+
+:host ::ng-deep .marker-friend {
+  width: 20px;
+  height: 20px;
+  background-color: red;
+  border-radius: 50%;
+  border: 2px solid white;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+}
+
