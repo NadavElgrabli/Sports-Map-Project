@@ -12,7 +12,7 @@ const routes: Routes = [
   { path: 'home', component: HomePageComponent },
   { path: 'signup', component: SignupFormComponent },
   { path: 'login', component: LoginFormComponent },
-  { path: 'map', component: MapComponent, canActivate: [MapGuard] },
+  { path: 'map/:id', component: MapComponent, canActivate: [MapGuard] },
   { path: 'not-found', component: PageNotFoundComponent },
   { path: '**', redirectTo: '/not-found' },
 ];

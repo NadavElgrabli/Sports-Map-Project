@@ -27,7 +27,7 @@ export class LoginFormComponent {
       (res) => {
         console.log('Login response:', res);
         this.isLoading = false;
-        this.router.navigate(['map']);
+        this.router.navigate(['/map', res.user.id]);
       },
       (err) => {
         console.error(err);

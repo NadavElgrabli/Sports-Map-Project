@@ -34,3 +34,4 @@ C:\Users\ereze\VSCodeProjects\Angular Projects\sports-share\backend\SportsShare.
 C:\Users\ereze\VSCodeProjects\Angular Projects\sports-share\backend\SportsShare.Api\bin\Debug\net9.0\Swashbuckle.AspNetCore.Swagger.dll
 C:\Users\ereze\VSCodeProjects\Angular Projects\sports-share\backend\SportsShare.Api\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerGen.dll
 C:\Users\ereze\VSCodeProjects\Angular Projects\sports-share\backend\SportsShare.Api\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+C:\Users\ereze\VSCodeProjects\Angular Projects\sports-share\backend\SportsShare.Api\obj\Debug\net9.0\SportsShare.Api.sourcelink.json

@@ -44,7 +44,7 @@ namespace SportsShare.Api.Controllers
 
             var response = new
             {
-                expiresIn = 60,                // expires in 10 seconds for testing purposes
+                expiresIn = 10,                // expires in 10 seconds for testing purposes
                 user = authUser
             };
 

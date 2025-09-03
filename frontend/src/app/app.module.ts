@@ -14,6 +14,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { AuthService } from './services/auth.service';
 import { LoadingSpinnerComponent } from './shared/loading-spinner/loading-spinner.component';
+import { MapFriendsListComponent } from './components/map/map-friends-list/map-friends-list.component';
+import { MapNotificationsComponent } from './components/map/map-notifications/map-notifications.component';
+import { MapLiveComponent } from './components/map/map-live/map-live.component';
 
 @NgModule({
   declarations: [
@@ -26,6 +29,9 @@ import { LoadingSpinnerComponent } from './shared/loading-spinner/loading-spinne
     MapComponent,
     PageNotFoundComponent,
     LoadingSpinnerComponent,
+    MapFriendsListComponent,
+    MapNotificationsComponent,
+    MapLiveComponent,
   ],
   imports: [
     BrowserModule,

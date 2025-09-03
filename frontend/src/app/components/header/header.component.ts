@@ -9,6 +9,7 @@ import { AuthService } from '../../services/auth.service';
 export class HeaderComponent {
   isAuthenticated = false;
   username: string | null = null;
+  userId: number | null = null;
 
   constructor(private authService: AuthService) {}
 
@@ -17,6 +18,7 @@ export class HeaderComponent {
       this.isAuthenticated = !user ? false : true;
       if (user) {
         this.username = user.username;
+        this.userId = user ? user.id : null;
       } else {
         this.username = null;
       }

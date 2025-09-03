@@ -2,7 +2,9 @@
   <nav class="header-container">
     <ul>
       <li><a routerLink="/">Home</a></li>
-      <li *ngIf="isAuthenticated"><a routerLink="map">Map</a></li>
+      <li *ngIf="isAuthenticated">
+        <a [routerLink]="['/map', userId]">Map</a>
+      </li>
     </ul>
 
     <div class="center-menu" *ngIf="isAuthenticated">
