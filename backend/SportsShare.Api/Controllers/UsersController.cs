@@ -56,11 +56,14 @@ namespace SportsShare.Api.Controllers
         }
 
 
-        [HttpGet("users")]
+        [HttpGet] 
         public IActionResult GetAll()
         {
-            return Ok(_userService.GetAll());
+            var users = _userService.GetAll();
+            return Ok(users);
         }
+
+
 
         [HttpGet("{id}")]
         public IActionResult GetById(int id)

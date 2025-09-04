@@ -1,1 +1,33 @@
-<p>map-friends-list works!</p>
+<div class="friends-list-box" *ngIf="loggedInUser">
+  <h4>Friends List</h4>
+
+  <label>
+    Sort by:
+    <select [(ngModel)]="sortBy" (change)="sortFriends()">
+      <option value="name">Name</option>
+      <option value="weight">Weight</option>
+      <option value="distance">Distance</option>
+    </select>
+  </label>
+
+  <ul>
+    <li *ngFor="let friend of friends">
+      {{ friend.username }}
+      <span *ngIf="sortBy === 'weight'"> - {{ friend.weight }}kg</span>
+      <span *ngIf="sortBy === 'distance'">
+        -
+        {{
+          getDistance(
+            +loggedInUser.currentLocation.latitude,
+            +loggedInUser.currentLocation.longitude,
+            +friend.currentLocation.latitude,
+            +friend.currentLocation.longitude
+          ) | number : "1.0-1"
+        }}
+        km
+      </span>
+    </li>
+  </ul>
+
+  <p *ngIf="friends.length === 0">No friends found.</p>
+</div>

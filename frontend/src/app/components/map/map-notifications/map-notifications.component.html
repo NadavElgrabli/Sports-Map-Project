@@ -1,1 +1,16 @@
-<p>map-notifications works!</p>
+<div class="notifications-box">
+  <h4>Nearby Friends ({{ radius }} km)</h4>
+
+  <label>
+    Radius (km):
+    <input type="number" [(ngModel)]="radius" min="0.5" step="0.5" />
+  </label>
+
+  <ul>
+    <li *ngFor="let user of nearByUsers">
+      {{ user.username }}
+    </li>
+  </ul>
+
+  <p *ngIf="nearByUsers.length === 0">No friends nearby.</p>
+</div>
