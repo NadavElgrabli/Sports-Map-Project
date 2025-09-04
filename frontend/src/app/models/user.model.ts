@@ -14,13 +14,11 @@ export class User {
     public expiresIn: number,
     public expirationDate: Date,
     public currentLocation: Location = { latitude: 0, longitude: 0 },
-    public friends: User[] = []
+    public friends: number[] = []
   ) {}
 
   get isActive() {
-    if (!this.expirationDate || new Date() > this.expirationDate) {
-      return false;
-    }
-    return true;
+    return !!this.expirationDate && new Date() <= this.expirationDate;
   }
 }
+

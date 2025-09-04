@@ -21,11 +21,15 @@ namespace SportsShare.Api.Controllers
             if (user.DateOfBirth.Month % 2 == 0)
                 return BadRequest("Cannot signup users born in even months.");
 
+            // Check for null or empty username
+            if (string.IsNullOrWhiteSpace(user.Username))
+                return BadRequest("Username is required.");
+
+            // Trim username before checking existence
+            user.Username = user.Username.Trim();
+
             if (_userService.UsernameExists(user.Username))
                 return BadRequest("Username already exists.");
-
-            // Trim username before saving
-            user.Username = user.Username?.Trim();
 
             var addedUser = _userService.Add(user);
             return Ok(addedUser);
@@ -56,6 +60,28 @@ namespace SportsShare.Api.Controllers
         public IActionResult GetAll()
         {
             return Ok(_userService.GetAll());
+        }
+
+        [HttpGet("{id}")]
+        public IActionResult GetById(int id)
+        {
+            var user = _userService.GetById(id);
+            if (user == null) return NotFound();
+            return Ok(user);
+        }
+
+        [HttpGet("{id}/friends")]
+        public IActionResult GetFriends(int id)
+        {
+            var user = _userService.GetById(id);
+            if (user == null) return NotFound();
+
+            var friends = user.Friends
+                .Select(fid => _userService.GetById(fid))
+                .Where(f => f != null)
+                .ToList();
+
+            return Ok(friends);
         }
     }
 }

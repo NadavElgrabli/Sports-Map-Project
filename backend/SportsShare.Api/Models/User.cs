@@ -12,7 +12,7 @@ namespace SportsShare.Api.Models
         // New fields
         public Location CurrentLocation { get; set; } = new Location();
 
-        // Friends as full User objects
-        public List<User> Friends { get; set; } = new List<User>();
+        // Store friend IDs instead of User objects
+        public List<int> Friends { get; set; } = new List<int>();
     }
 }

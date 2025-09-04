@@ -9,7 +9,7 @@ export interface SignUpResponseData {
   weight: number;
   address: string;
   currentLocation: Location;
-  friends: User[];
+  friends: number[]; 
 }
 
 export interface LoginResponseData {
@@ -22,6 +22,6 @@ export interface LoginResponseData {
     weight: number;
     address: string;
     currentLocation: Location;
-    friends: User[];
+    friends: number[]; 
   };
 }
