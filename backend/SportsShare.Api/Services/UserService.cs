@@ -101,6 +101,8 @@ namespace SportsShare.Api.Services
             // Friendships
             AddFriend(userA.Id, userB.Id);
             AddFriend(userA.Id, userC.Id);
+            AddFriend(userA.Id, userD.Id);
+            AddFriend(userA.Id, userE.Id);
             AddFriend(userB.Id, userD.Id);
             AddFriend(userC.Id, userE.Id);
             AddFriend(userD.Id, userE.Id);

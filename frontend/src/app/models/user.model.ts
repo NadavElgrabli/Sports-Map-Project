@@ -1,7 +1,4 @@
-export interface Location {
-  latitude: number;
-  longitude: number;
-}
+import { Location } from '../interfaces/location.interface';
 
 export class User {
   constructor(
@@ -21,4 +18,3 @@ export class User {
     return !!this.expirationDate && new Date() <= this.expirationDate;
   }
 }
-

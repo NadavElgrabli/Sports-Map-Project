@@ -1,31 +1,42 @@
 .header-container {
   display: flex;
-  justify-content: space-between;          
-  align-items: center;    
-  padding: 10px 20px;
-  background-color: rgb(211, 211, 211);
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 30px;
+  background-color: rgb(230, 230, 230); 
+  font-size: 1.1rem; 
+  font-family: Arial, Helvetica, sans-serif; 
 }
 
 .header-container ul {
-  display: flex;          
-  list-style: none;       
+  display: flex;
+  list-style: none;
   margin: 0;
   padding: 0;
 }
 
 .header-container li {
-  margin: 0 15px;         
+  margin: 0 18px;
 }
 
-.header-container a {
+.header-container a,
+.header-container .logout-link {
   font-weight: bold;
   text-decoration: none;
+  color: black;
+  cursor: pointer;
+  transition: color 0.2s ease;
 }
 
+.header-container a:hover,
+.header-container .logout-link:hover {
+  color: rgb(0, 102, 204); 
+}
 
 .center-menu {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
   font-weight: bold;
+  font-size: 1.1rem;
 }
