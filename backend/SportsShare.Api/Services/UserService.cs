@@ -7,6 +7,11 @@ namespace SportsShare.Api.Services
         private readonly List<User> _users = new List<User>();
         private int _nextId = 1;
 
+    public UserService()
+    {
+        SeedUsers(); 
+    }
+
         public IEnumerable<User> GetAll() => _users;
 
         public User? GetById(int id) => _users.FirstOrDefault(u => u.Id == id);
@@ -52,6 +57,24 @@ namespace SportsShare.Api.Services
             {
                 user.Friends.Add(friend);
             }
+            if (friend != null && user != null && !friend.Friends.Contains(user))
+            {
+                friend.Friends.Add(user); // ensure mutual friendship
+            }
+        }
+
+        private void SeedUsers()
+        {
+            // Example users
+            var userA = Add(new User { Username = "a", Password = "1", DateOfBirth = new DateTime(1990, 1, 1), Weight = 70, Address = "Jerusalem" });
+            var userB = Add(new User { Username = "b", Password = "2", DateOfBirth = new DateTime(1990, 2, 2), Weight = 80, Address = "Tel Aviv" });
+            var userC = Add(new User { Username = "c", Password = "3", DateOfBirth = new DateTime(1990, 3, 3), Weight = 65, Address = "Haifa" });
+            var userD = Add(new User { Username = "d", Password = "4", DateOfBirth = new DateTime(1990, 4, 4), Weight = 75, Address = "Beer Sheva" });
+            var userE = Add(new User { Username = "e", Password = "5", DateOfBirth = new DateTime(1990, 5, 5), Weight = 68, Address = "Eilat" });
+            var userF = Add(new User { Username = "f", Password = "6", DateOfBirth = new DateTime(1990, 6, 6), Weight = 82, Address = "Netanya" });
+
+            // Define friends (mutual friendships)
+            // AddFriend(userA.Id, userB.Id);
         }
     }
 }
