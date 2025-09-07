@@ -19,6 +19,7 @@ import { MapNotificationsComponent } from './components/map/map-notifications/ma
 import { MapLiveComponent } from './components/map/map-live/map-live.component';
 import { CloseUsersDirective } from './directives/close-users-highlight.directive';
 import { MapService } from './services/map.service';
+import { MapUserRouteComponent } from './components/map/map-user-route/map-user-route.component';
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import { MapService } from './services/map.service';
     MapFriendsListComponent,
     MapNotificationsComponent,
     MapLiveComponent,
+    MapUserRouteComponent,
     CloseUsersDirective
   ],
   imports: [
