@@ -8,6 +8,6 @@ export class CloseUsersDirective implements OnInit {
   @HostBinding('style.backgroundColor') backgroundColor: string = 'transparent';
 
   ngOnInit() {
-    this.backgroundColor = this.distance <= 2 ? '#e1ff00ff' : 'transparent';
+    this.backgroundColor = this.distance <= 1.5 ? '#e1ff00ff' : 'transparent';
   }
 }
