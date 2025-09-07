@@ -17,6 +17,7 @@ import { LoadingSpinnerComponent } from './shared/loading-spinner/loading-spinne
 import { MapFriendsListComponent } from './components/map/map-friends-list/map-friends-list.component';
 import { MapNotificationsComponent } from './components/map/map-notifications/map-notifications.component';
 import { MapLiveComponent } from './components/map/map-live/map-live.component';
+import { CloseUsersDirective } from './directives/close-users-highlight.directive';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { MapLiveComponent } from './components/map/map-live/map-live.component';
     MapFriendsListComponent,
     MapNotificationsComponent,
     MapLiveComponent,
+    CloseUsersDirective
   ],
   imports: [
     BrowserModule,
