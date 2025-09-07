@@ -23,7 +23,7 @@ export class MapService {
       container,
       style: 'mapbox://styles/mapbox/streets-v11',
       center,
-      zoom: 13,
+      zoom: 15,
     });
 
     this.map.on('contextmenu', onRightClick);
