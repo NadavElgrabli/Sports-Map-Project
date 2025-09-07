@@ -8,11 +8,7 @@ namespace SportsShare.Api.Models
         public DateTime DateOfBirth { get; set; }
         public double Weight { get; set; }
         public string? Address { get; set; }
-
-        // New fields
         public Location CurrentLocation { get; set; } = new Location();
-
-        // Store friend IDs instead of User objects
         public List<int> Friends { get; set; } = new List<int>();
     }
 }
