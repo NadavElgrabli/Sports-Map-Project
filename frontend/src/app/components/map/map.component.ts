@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-map',
@@ -9,14 +9,18 @@ import { ActivatedRoute } from '@angular/router';
 export class MapComponent {
   viewedUserId: number | null = null;
 
-  constructor(private route: ActivatedRoute) {}
+  constructor(private activeRoute: ActivatedRoute, private router: Router) {}
 
   ngOnInit() {
-    this.route.paramMap.subscribe((params) => {
+    this.activeRoute.paramMap.subscribe((params) => {
       const id = params.get('id');
       this.viewedUserId = id ? +id : null;
-      // now you can call your API to fetch friends/locations for viewedUserId
-      // e.g. this.loadFriendsForUser(this.viewedUserId);
     });
+  }
+
+  goToUserRoute() {
+    if (this.viewedUserId) {
+      this.router.navigate([`/map/${this.viewedUserId}/trail`]);
+    }
   }
 }
