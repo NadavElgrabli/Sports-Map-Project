@@ -114,13 +114,18 @@ export class MapService {
           el.className = 'trail-media-marker';
           el.style.width = '20px';
           el.style.height = '20px';
-          el.style.backgroundImage =
-            m.type === 'image'
-              ? `url(${m.url})`
-              : 'url(https://cdn-icons-png.flaticon.com/512/727/727245.png)';
-          el.style.backgroundSize = 'cover';
           el.style.borderRadius = '50%';
           el.style.cursor = 'pointer';
+          el.style.backgroundSize = 'cover';
+          el.style.backgroundPosition = 'center';
+          el.style.backgroundRepeat = 'no-repeat';
+
+          if (m.type === 'image') {
+            el.style.backgroundImage = `url(${m.url})`;
+          } else {
+            // White circle with larger orange play button
+            el.style.backgroundImage = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20'%3E%3Ccircle cx='10' cy='10' r='10' fill='white'/%3E%3Cpolygon points='7,5 7,15 15,10' fill='%23FF9800'/%3E%3C/svg%3E")`;
+          }
 
           const marker = new mapboxgl.Marker({ element: el })
             .setLngLat([point.location.longitude, point.location.latitude])

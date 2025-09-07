@@ -1,4 +1,3 @@
-import { User } from '../models/user.model';
 import { Location } from './location.interface';
 
 export interface SignUpResponseData {
