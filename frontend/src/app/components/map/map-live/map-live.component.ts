@@ -99,6 +99,7 @@ export class MapLiveComponent implements OnInit, OnDestroy {
     if (!this.map) return;
 
     const existingMarker = this.markers.get(user.id);
+
     if (existingMarker) {
       // Move existing marker
       existingMarker.setLngLat([
@@ -125,27 +126,3 @@ export class MapLiveComponent implements OnInit, OnDestroy {
     }
   }
 }
-
-// addMarker(user: User) {
-//   if (!this.map) return;
-
-//   // Outer container (Mapbox will touch this)
-//   const wrapper = document.createElement('div');
-
-//   // Inner element that we control
-//   const inner = document.createElement('div');
-//   inner.className =
-//     user.id === this.loggedInUser?.id ? 'marker-logged-in' : 'marker-friend';
-
-//   wrapper.appendChild(inner);
-
-//   console.log('Marker element:', wrapper);
-
-//   new mapboxgl.Marker({ element: wrapper })
-//     .setLngLat([
-//       user.currentLocation.longitude,
-//       user.currentLocation.latitude,
-//     ])
-//     .setPopup(new mapboxgl.Popup({ offset: 25 }).setText(user.username))
-//     .addTo(this.map);
-// }
