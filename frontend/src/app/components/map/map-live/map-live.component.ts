@@ -78,7 +78,7 @@ export class MapLiveComponent implements OnInit, OnDestroy {
 
     // Clear previous markers (both user markers and media markers)
     this.mapService.clearUserMarkers();
-    this.mapService.clearMediaMarkers();
+    // this.mapService.clearMediaMarkers();
 
     forkJoin([
       this.http.get<User>(

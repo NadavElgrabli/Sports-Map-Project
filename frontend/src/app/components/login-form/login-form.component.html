@@ -1,5 +1,9 @@
 <div>
-  <form (ngSubmit)="onSubmit(loginForm)" #loginForm="ngForm">
+  <div *ngIf="isLoading" class="spinner-container">
+    <app-loading-spinner></app-loading-spinner>
+  </div>
+
+  <form *ngIf="!isLoading" (ngSubmit)="onSubmit(loginForm)" #loginForm="ngForm">
     <div>
       <label for="userName">Username</label>
       <input type="text" id="userName" ngModel name="userName" required />
