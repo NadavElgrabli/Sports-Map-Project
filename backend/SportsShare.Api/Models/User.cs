@@ -10,5 +10,8 @@ namespace SportsShare.Api.Models
         public string? Address { get; set; }
         public Location CurrentLocation { get; set; } = new Location();
         public List<int> Friends { get; set; } = new List<int>();
+
+        // NEW: Trail history
+        public List<TrailPoint> Trail { get; set; } = new List<TrailPoint>();
     }
 }

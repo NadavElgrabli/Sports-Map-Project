@@ -18,6 +18,7 @@ import { MapFriendsListComponent } from './components/map/map-friends-list/map-f
 import { MapNotificationsComponent } from './components/map/map-notifications/map-notifications.component';
 import { MapLiveComponent } from './components/map/map-live/map-live.component';
 import { CloseUsersDirective } from './directives/close-users-highlight.directive';
+import { MapService } from './services/map.service';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,7 @@ import { CloseUsersDirective } from './directives/close-users-highlight.directiv
     ReactiveFormsModule,
     HttpClientModule,
   ],
-  providers: [AuthService],
+  providers: [AuthService, MapService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

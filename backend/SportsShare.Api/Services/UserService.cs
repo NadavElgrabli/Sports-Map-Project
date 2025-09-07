@@ -53,13 +53,24 @@ namespace SportsShare.Api.Services
         {
             foreach (var user in _users)
             {
-                // Max ~30 meters in latitude/longitude degrees
-                double maxDelta = 0.00027; // ~30m in degrees
+                double maxDelta = 0.00027; // ~30m
 
                 user.CurrentLocation.Latitude += (_rnd.NextDouble() * 2 - 1) * maxDelta;
                 user.CurrentLocation.Longitude += (_rnd.NextDouble() * 2 - 1) * maxDelta;
+
+                // Add current location to trail
+                user.Trail.Add(new TrailPoint
+                {
+                    Location = new Location
+                    {
+                        Latitude = user.CurrentLocation.Latitude,
+                        Longitude = user.CurrentLocation.Longitude
+                    },
+                    Timestamp = DateTime.UtcNow
+                });
             }
         }
+
 
         public User? Authenticate(string username, string password)
         {

@@ -1,4 +1,5 @@
 import { Location } from '../interfaces/location.interface';
+import { TrailPoint } from '../interfaces/trail.interface';
 
 export class User {
   constructor(
@@ -11,7 +12,8 @@ export class User {
     public expiresIn: number,
     public expirationDate: Date,
     public currentLocation: Location = { latitude: 0, longitude: 0 },
-    public friends: number[] = []
+    public friends: number[] = [],
+    public trail: TrailPoint[] = [] 
   ) {}
 
   get isActive() {

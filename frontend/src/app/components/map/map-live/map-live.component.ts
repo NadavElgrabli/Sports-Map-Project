@@ -11,6 +11,8 @@ import { AuthService } from '../../../services/auth.service';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { Subscription, interval, forkJoin } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { TrailPoint } from '../../../interfaces/trail.interface';
+import { MapService } from '../../../services/map.service';
 
 @Component({
   selector: 'app-map-live',
@@ -26,9 +28,11 @@ export class MapLiveComponent implements OnInit, OnDestroy {
   map!: mapboxgl.Map;
   loggedInUser!: User | null;
 
-  private markers: Map<number, mapboxgl.Marker> = new Map();
-
-  constructor(private authService: AuthService, private http: HttpClient) {}
+  constructor(
+    private authService: AuthService,
+    private http: HttpClient,
+    private mapService: MapService
+  ) {}
 
   ngOnInit() {
     this.userSub = this.authService.user.subscribe((user) => {
@@ -45,40 +49,37 @@ export class MapLiveComponent implements OnInit, OnDestroy {
     if (this.map) this.map.remove();
   }
 
-  initMap() {
+  private initMap() {
     if (!this.loggedInUser) return;
 
-    mapboxgl.accessToken =
-      'pk.eyJ1IjoiZWUxOTk2IiwiYSI6ImNtZjN1cnhtdDAwcHYya3I0cmhpNzF3bDkifQ.b4WP0iqLlxYqJAqstne1lA';
-
-    this.map = new mapboxgl.Map({
-      container: this.mapContainer.nativeElement,
-      style: 'mapbox://styles/mapbox/streets-v11',
-      center: [
+    this.mapService.initMap(
+      this.mapContainer.nativeElement,
+      [
         this.loggedInUser.currentLocation.longitude,
         this.loggedInUser.currentLocation.latitude,
       ],
-      zoom: 10,
-    });
+      (e) => this.addMediaPrompt(e),
+      () => {
+        this.addOrUpdateMarker(this.loggedInUser!);
 
-    this.map.on('load', () => {
-      // Add initial logged-in user marker
-      this.addOrUpdateMarker(this.loggedInUser!);
+        this.updateIntervalSub = interval(5000).subscribe(() => {
+          this.updateUsers();
+        });
 
-      // Start live update every 5 seconds
-      this.updateIntervalSub = interval(5000).subscribe(() => {
         this.updateUsers();
-      });
+      }
+    );
 
-      // Initial fetch of friends & current user
-      this.updateUsers();
-    });
+    this.map = this.mapService.getMap();
   }
 
   private updateUsers() {
     if (!this.loggedInUser) return;
 
-    // Fetch logged-in user + friends in parallel
+    // Clear previous markers (both user markers and media markers)
+    this.mapService.clearUserMarkers();
+    this.mapService.clearMediaMarkers();
+
     forkJoin([
       this.http.get<User>(
         `http://localhost:5202/api/users/${this.loggedInUser.id}`
@@ -87,42 +88,45 @@ export class MapLiveComponent implements OnInit, OnDestroy {
         `http://localhost:5202/api/users/${this.loggedInUser.id}/friends`
       ),
     ]).subscribe(([currentUser, friends]) => {
-      // Update logged-in user marker
       this.addOrUpdateMarker(currentUser);
+      this.mapService.drawTrail(currentUser, '#007bff');
+      this.mapService.drawMediaMarkers(currentUser);
 
-      // Update friend markers
-      friends.forEach((friend) => this.addOrUpdateMarker(friend));
+      friends.forEach((friend) => {
+        this.addOrUpdateMarker(friend);
+        this.mapService.drawTrail(friend, '#ff0000');
+        this.mapService.drawMediaMarkers(friend);
+      });
     });
   }
 
   private addOrUpdateMarker(user: User) {
-    if (!this.map) return;
+    if (!this.loggedInUser) return;
 
-    const existingMarker = this.markers.get(user.id);
+    this.mapService.addOrUpdateMarker(user, user.id === this.loggedInUser?.id);
+  }
 
-    if (existingMarker) {
-      // Move existing marker
-      existingMarker.setLngLat([
-        user.currentLocation.longitude,
-        user.currentLocation.latitude,
-      ]);
-    } else {
-      // Create new marker
-      const el = document.createElement('div');
-      el.className =
-        user.id === this.loggedInUser?.id
-          ? 'marker-logged-in'
-          : 'marker-friend';
+  private addMediaPrompt(e: mapboxgl.MapMouseEvent) {
+    if (!this.loggedInUser) return;
 
-      const marker = new mapboxgl.Marker({ element: el })
-        .setLngLat([
-          user.currentLocation.longitude,
-          user.currentLocation.latitude,
-        ])
-        .setPopup(new mapboxgl.Popup({ offset: 25 }).setText(user.username))
-        .addTo(this.map);
+    const url = prompt('Enter image/video URL for this location:');
+    if (!url) return;
 
-      this.markers.set(user.id, marker);
-    }
+    const type = url.endsWith('.mp4') ? 'video' : 'image';
+
+    this.http
+      .post<TrailPoint>(
+        `http://localhost:5202/api/users/${this.loggedInUser.id}/trail/media`,
+        {
+          latitude: e.lngLat.lat,
+          longitude: e.lngLat.lng,
+          url,
+          type,
+        }
+      )
+      .subscribe(() => {
+        alert('Media added!');
+        this.updateUsers();
+      });
   }
 }

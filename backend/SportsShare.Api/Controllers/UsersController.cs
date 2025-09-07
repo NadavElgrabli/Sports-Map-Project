@@ -86,5 +86,35 @@ namespace SportsShare.Api.Controllers
 
             return Ok(friends);
         }
+
+        // Get full trail of a user
+        [HttpGet("{id}/trail")]
+        public IActionResult GetTrail(int id)
+        {
+            var user = _userService.GetById(id);
+            if (user == null) return NotFound();
+
+            return Ok(user.Trail);
+        }
+
+        // Add media to a specific trail point
+        [HttpPost("{id}/trail/media")]
+        public IActionResult AddMediaToTrail(int id, [FromBody] MediaRequest request)
+        {
+            var user = _userService.GetById(id);
+            if (user == null) return NotFound();
+
+            // Find closest trail point to requested location (or exact match)
+            var closest = user.Trail.OrderBy(t => 
+                Math.Pow(t.Location.Latitude - request.Latitude, 2) +
+                Math.Pow(t.Location.Longitude - request.Longitude, 2)
+            ).FirstOrDefault();
+
+            if (closest == null) return BadRequest("No trail point found near this location.");
+
+            closest.Media.Add(new Models.Media { Url = request.Url, Type = request.Type });
+
+            return Ok(closest);
+        }
     }
 }
