@@ -14,7 +14,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { AuthService } from './services/auth.service';
 import { LoadingSpinnerComponent } from './shared/loading-spinner/loading-spinner.component';
 import { MapService } from './services/map.service';
-import { MapModule } from './components/map/map.module';
 import { SharedModule } from './shared/shared.module';
 
 @NgModule({
@@ -36,7 +35,7 @@ import { SharedModule } from './shared/shared.module';
     HttpClientModule,
     SharedModule,
   ],
-  providers: [AuthService, MapService],
+  providers: [],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
