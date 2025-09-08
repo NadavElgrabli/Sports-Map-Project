@@ -7,7 +7,7 @@ import { HttpClient } from '@angular/common/http';
 @Component({
   selector: 'app-map-notifications',
   templateUrl: './map-notifications.component.html',
-  styleUrl: './map-notifications.component.scss',
+  styleUrls: ['./map-notifications.component.scss'],
 })
 export class MapNotificationsComponent implements OnInit, OnDestroy {
   loggedInUser!: User | null;
@@ -59,7 +59,7 @@ export class MapNotificationsComponent implements OnInit, OnDestroy {
             userLat,
             userLng
           );
-          return distance <= this.radius; 
+          return distance <= this.radius;
         });
 
         // console.log(

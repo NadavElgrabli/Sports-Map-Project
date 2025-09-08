@@ -14,7 +14,11 @@ const routes: Routes = [
   { path: 'signup', component: SignupFormComponent },
   { path: 'login', component: LoginFormComponent },
   { path: 'map/:id', component: MapComponent, canActivate: [MapGuard] },
-  { path: 'map/:id/trail', component: MapUserRouteComponent, canActivate: [MapGuard] },
+  {
+    path: 'map/:id/trail',
+    component: MapUserRouteComponent,
+    canActivate: [MapGuard],
+  },
   { path: 'not-found', component: PageNotFoundComponent },
   { path: '**', redirectTo: '/not-found' },
 ];
