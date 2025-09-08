@@ -34,7 +34,6 @@ import { SharedModule } from './shared/shared.module';
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    MapModule,
     SharedModule,
   ],
   providers: [AuthService, MapService],
