@@ -69,13 +69,14 @@ export class MapFriendsListComponent {
     }
   }
 
+  //not my code
   public getDistance(
     lat1: number,
     lng1: number,
     lat2: number,
     lng2: number
   ): number {
-    const R = 6371; // Earth radius in km
+    const R = 6371;
     const dLat = this.deg2rad(lat2 - lat1);
     const dLng = this.deg2rad(lng2 - lng1);
     const a =
