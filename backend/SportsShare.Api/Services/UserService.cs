@@ -108,17 +108,32 @@ namespace SportsShare.Api.Services
             var userD = Add(new User { Username = "d", Password = "4", DateOfBirth = new DateTime(1991, 4, 4), Weight = 75, Address = "Beer Sheva" });
             var userE = Add(new User { Username = "e", Password = "5", DateOfBirth = new DateTime(1992, 5, 5), Weight = 68, Address = "Eilat" });
             var userF = Add(new User { Username = "f", Password = "6", DateOfBirth = new DateTime(1993, 6, 6), Weight = 82, Address = "Netanya" });
+            var userG = Add(new User { Username = "g", Password = "7", DateOfBirth = new DateTime(1994, 7, 7), Weight = 77, Address = "Rishon LeZion" });
+            var userH = Add(new User { Username = "h", Password = "8", DateOfBirth = new DateTime(1995, 8, 8), Weight = 60, Address = "Ashdod" });
+            var userI = Add(new User { Username = "i", Password = "9", DateOfBirth = new DateTime(1996, 9, 9), Weight = 73, Address = "Petah Tikva" });
 
             // Friendships
             AddFriend(userA.Id, userB.Id);
             AddFriend(userA.Id, userC.Id);
             AddFriend(userA.Id, userD.Id);
             AddFriend(userA.Id, userE.Id);
+            AddFriend(userA.Id, userF.Id);
+            AddFriend(userA.Id, userG.Id);
+            AddFriend(userA.Id, userH.Id);
+            AddFriend(userB.Id, userC.Id);
             AddFriend(userB.Id, userD.Id);
+            AddFriend(userB.Id, userG.Id);
             AddFriend(userC.Id, userE.Id);
+            AddFriend(userC.Id, userH.Id);
             AddFriend(userD.Id, userE.Id);
+            AddFriend(userD.Id, userF.Id);
             AddFriend(userE.Id, userF.Id);
-            AddFriend(userF.Id, userA.Id); 
+            AddFriend(userE.Id, userG.Id);
+            AddFriend(userF.Id, userH.Id);
+            AddFriend(userG.Id, userH.Id);
+            AddFriend(userG.Id, userI.Id);
+            AddFriend(userH.Id, userI.Id);
+            AddFriend(userI.Id, userA.Id); // closes a loop for more network connectivity
         }
     }
 }
