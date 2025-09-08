@@ -6,12 +6,10 @@ import {
   ViewChild,
 } from '@angular/core';
 import { User } from '../../../models/user.model';
-import mapboxgl from 'mapbox-gl';
 import { AuthService } from '../../../services/auth.service';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { Subscription, forkJoin } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { TrailPoint } from '../../../interfaces/trail.interface';
 import { MapService } from '../../../services/map.service';
 
 @Component({
@@ -36,6 +34,7 @@ export class MapUserRouteComponent implements OnInit, OnDestroy {
     this.userSub = this.authService.user.subscribe((user) => {
       this.loggedInUser = user;
       if (user) {
+        // delay init so Angular finishes rendering first
         setTimeout(() => this.initMap(), 0);
       }
     });

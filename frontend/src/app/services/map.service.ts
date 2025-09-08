@@ -5,7 +5,7 @@ import { User } from '../models/user.model';
 @Injectable({ providedIn: 'root' })
 export class MapService {
   private map!: MapboxMap;
-  private userMarkers: Map<number, Marker> = new Map();
+  private userMarkers: Map<number, Marker> = new Map(); // key user id, value marker
   private mediaMarkers: Marker[] = [];
 
   constructor() {
@@ -71,19 +71,27 @@ export class MapService {
   drawTrail(user: User, color: string): void {
     if (!this.map || !user.trail || user.trail.length === 0) return;
 
+    //turn the array of trail points to [[lion1, lat1], [lon2, lat2]] - the format that mapbox needs
     const coordinates = user.trail.map((tp) => [
       tp.location.longitude,
       tp.location.latitude,
     ]);
+
+    //each trail given a unique id (user id 7, then trail is trail-7)
     const sourceId = `trail-${user.id}`;
 
+    //If we’ve already drawn this user’s trail before - redraw the whole trail with the new line at the end
     if (this.map.getSource(sourceId)) {
       (this.map.getSource(sourceId) as any).setData({
         type: 'Feature',
         geometry: { type: 'LineString', coordinates },
         properties: {},
       });
+
+      //If the trail doesn’t exist yet:
     } else {
+
+      //Add a new data source (addSource) with the trail coordinates.
       this.map.addSource(sourceId, {
         type: 'geojson',
         data: {
@@ -93,6 +101,7 @@ export class MapService {
         },
       });
 
+      //Add a layer (addLayer) that tells Mapbox how to render that source.
       this.map.addLayer({
         id: `trail-layer-${user.id}`,
         type: 'line',
