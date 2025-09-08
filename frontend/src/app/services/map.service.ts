@@ -39,7 +39,7 @@ export class MapService {
     return this.map;
   }
 
-  // --- Add or update a single user marker ---
+  // Add or update a single user marker
   addOrUpdateMarker(user: User, isLoggedIn: boolean): void {
     if (!this.map) return;
 
@@ -67,7 +67,7 @@ export class MapService {
     }
   }
 
-  // --- Draw a trail for a user ---
+  // Draw a trail for a user
   drawTrail(user: User, color: string): void {
     if (!this.map || !user.trail || user.trail.length === 0) return;
 
@@ -103,7 +103,7 @@ export class MapService {
     }
   }
 
-  // --- Draw media markers for a user ---
+  // Draw media markers for a user
   drawMediaMarkers(user: User): void {
     if (!this.map || !user.trail) return;
 
@@ -123,7 +123,6 @@ export class MapService {
           if (m.type === 'image') {
             el.style.backgroundImage = `url(${m.url})`;
           } else {
-            // White circle with larger orange play button
             el.style.backgroundImage = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20'%3E%3Ccircle cx='10' cy='10' r='10' fill='white'/%3E%3Cpolygon points='7,5 7,15 15,10' fill='%23FF9800'/%3E%3C/svg%3E")`;
           }
 
@@ -144,13 +143,13 @@ export class MapService {
     });
   }
 
-  // --- Clear all media markers ---
+  // Clear all media markers
   clearMediaMarkers(): void {
     this.mediaMarkers.forEach((marker) => marker.remove());
     this.mediaMarkers = [];
   }
 
-  // --- Optional: clear all user markers ---
+  // Optional: clear all user markers
   clearUserMarkers(): void {
     this.userMarkers.forEach((marker) => marker.remove());
     this.userMarkers.clear();
