@@ -121,8 +121,10 @@ export class MapLiveComponent implements OnInit, OnDestroy {
     const url = prompt('Enter image/video URL for this location:');
     if (!url) return;
 
+    //TODO: every repetitive string should go into a const (video, image, .mp4) basically every string you have technical work with
     const type = url.endsWith('.mp4') ? 'video' : 'image';
 
+    //TODO: add ": name" for example: isntead of url, -> "url : url"
     this.http
       .post<TrailPoint>(
         `http://localhost:5202/api/users/${this.loggedInUser.id}/trail/media`,
@@ -134,6 +136,8 @@ export class MapLiveComponent implements OnInit, OnDestroy {
         }
       )
       .subscribe(() => {
+
+        //TODO: dont work with alert, only angular material dialogue
         alert('Media added!');
         this.updateUsers();
       });

@@ -28,10 +28,10 @@
 
       <!-- make the numbers round to 1 digit with atleast one number -->
       <span *ngIf="sortBy === 'distance'">
-        -
+        <!-- TODO: no need "+" -->
         {{
           getDistance(
-            +loggedInUser.currentLocation.latitude,
+            +loggedInUser.currentLocation.latitude, 
             +loggedInUser.currentLocation.longitude,
             +friend.currentLocation.latitude,
             +friend.currentLocation.longitude

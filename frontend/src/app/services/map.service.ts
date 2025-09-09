@@ -11,7 +11,7 @@ export class MapService {
   constructor() {
     mapboxgl.accessToken =
       'pk.eyJ1IjoiZWUxOTk2IiwiYSI6ImNtZjN1cnhtdDAwcHYya3I0cmhpNzF3bDkifQ.b4WP0iqLlxYqJAqstne1lA';
-  }
+  } //TODO: read about angular environment, why we need it , what it is, what we put there and why putting a token in the constructor is bad practice
 
   initMap(
     container: HTMLElement,
@@ -23,9 +23,10 @@ export class MapService {
       container,
       style: 'mapbox://styles/mapbox/streets-v11',
       center,
-      zoom: 15,
+      zoom: 15, //TODO: for constants (15), under shared folder, create a folder for constants, under constants folder create file for map constants 
     });
 
+    //TODO: remove all comments form the code
     //Hooks into the right-click event (context menu) on the map.
     this.map.on('contextmenu', onRightClick);
 
@@ -57,6 +58,7 @@ export class MapService {
       ]);
     } else {
 
+      //TODO: if the comment exists, its probably less clear -> seperate to a seperate function
       //create a new marker
       const el = document.createElement('div');
       el.className = colorClass;
@@ -66,6 +68,7 @@ export class MapService {
           user.currentLocation.longitude,
           user.currentLocation.latitude,
         ])
+        //TODO: look up for constant
         .setPopup(new mapboxgl.Popup({ offset: 25 }).setText(user.username))
         .addTo(this.map);
 
@@ -84,14 +87,18 @@ export class MapService {
       tp.location.latitude,
     ]);
 
+    //TODO: we set the data twice (type, geo, properties) so just put it into a variable to avoid repetition 
+
     //each trail given a unique id (user id 7, then trail is trail-7)
     const sourceId = `trail-${user.id}`;
 
     //If we’ve already drawn this user’s trail before - redraw the whole trail with the new line at the end
+
+    //TODO: calling getSource twice is unecessary, place it into a const to avoid double call
     if (this.map.getSource(sourceId)) {
-      (this.map.getSource(sourceId) as any).setData({
+      (this.map.getSource(sourceId) as any).setData({ //TODO: avoid using any, if you know what the return type is (here you know)
         type: 'Feature',
-        geometry: { type: 'LineString', coordinates },
+        geometry: { type: 'LineString', coordinates }, //TODO: 'LineString' is problematic due to typos, make it  into a cosntant
         properties: {},
       });
 
@@ -127,6 +134,7 @@ export class MapService {
       if (point.media && point.media.length > 0) {
         point.media.forEach((m) => {
           const el = document.createElement('div');
+          //TODO: always when creating an element dynamically, write it inside a const
           el.className = 'trail-media-marker';
           el.style.width = '20px';
           el.style.height = '20px';

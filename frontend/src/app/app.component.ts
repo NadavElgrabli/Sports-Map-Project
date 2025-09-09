@@ -10,6 +10,6 @@ export class AppComponent {
   constructor(private authService : AuthService) {}
 
   ngOnInit() {
-    this.authService.autoLogin();
+    this.authService.autoLogin(); // TODO: instead of putting autologin ehre, better to cal it from the service itself
   }
 }

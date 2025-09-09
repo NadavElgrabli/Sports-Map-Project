@@ -12,6 +12,8 @@ import { FriendsService } from '../../../services/friends.service';
 export class MapNotificationsComponent implements OnInit, OnDestroy {
   loggedInUser!: User | null;
   nearByUsers: User[] = [];
+
+  //TODO: we dont save subscriptions, find another way to unsubscribe
   userSub!: Subscription;
   intervalSub!: Subscription;
 
@@ -29,7 +31,7 @@ export class MapNotificationsComponent implements OnInit, OnDestroy {
       if (user) {
         this.updateNearbyUsers();
 
-        // Refresh every 5 seconds
+        //TODO: put into a const
         this.intervalSub = interval(5000).subscribe(() =>
           this.updateNearbyUsers()
         );
@@ -43,11 +45,13 @@ export class MapNotificationsComponent implements OnInit, OnDestroy {
   }
 
   updateNearbyUsers() {
+    //TODO: uncessecary check
     if (!this.loggedInUser) return;
 
     this.friendsService
       .getFriends(this.loggedInUser.id)
       .subscribe((friends) => {
+        // TODO: dont use short names, write the full loggedLattitude
         const loggedLat = Number(this.loggedInUser!.currentLocation.latitude);
         const loggedLng = Number(this.loggedInUser!.currentLocation.longitude);
 

@@ -11,7 +11,7 @@ import { FriendsService } from '../../../services/friends.service';
 export class MapFriendsListComponent {
   loggedInUser!: User | null;
   friends: User[] = [];
-  sortBy: 'name' | 'weight' | 'distance' = 'name';
+  sortBy: 'name' | 'weight' | 'distance' = 'name'; // todo: if the type is in multiple use - give it name
 
   constructor(
     private authService: AuthService,
@@ -22,13 +22,14 @@ export class MapFriendsListComponent {
     this.authService.user.subscribe((user) => {
       this.loggedInUser = user;
       if (user) {
+        // todo: no scope for 1 line
         this.loadFriends();
       }
     });
   }
 
   loadFriends() {
-    if (!this.loggedInUser) return;
+    if (!this.loggedInUser) return; //todo: :)
 
     this.friendsService
       .getFriends(this.loggedInUser.id)
@@ -41,6 +42,7 @@ export class MapFriendsListComponent {
       });
   }
 
+  // todo: underline before html functions + check all the other conventions in all of the project
   sortFriends() {
     if (!this.loggedInUser) return;
 
@@ -52,6 +54,8 @@ export class MapFriendsListComponent {
   }
 
   getDistance(lat1: number, lng1: number, lat2: number, lng2: number): number {
+    console.log('erezzzzzzzzzzzzzz');
+    // todo: explain what happening here
     return this.friendsService.getDistance(lat1, lng1, lat2, lng2);
   }
 }

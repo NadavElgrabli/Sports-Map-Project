@@ -11,6 +11,8 @@ import { AuthService } from '../services/auth.service';
 
 @Injectable({ providedIn: 'root' })
 export class MapGuard implements CanActivate {
+
+  //TODO: remove comments
   constructor(private authService: AuthService, private router: Router) {}
 
   canActivate(

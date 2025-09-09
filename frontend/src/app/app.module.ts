@@ -14,6 +14,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { LoadingSpinnerComponent } from './shared/loading-spinner/loading-spinner.component';
 import { SharedModule } from './shared/shared.module';
 
+//TODO: seperate imports of angular from the rest
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -23,7 +25,7 @@ import { SharedModule } from './shared/shared.module';
     LoginFormComponent,
     SignupFormComponent,
     PageNotFoundComponent,
-    LoadingSpinnerComponent,
+    LoadingSpinnerComponent, // TODO: Can delete this (?)
   ],
   imports: [
     BrowserModule,
