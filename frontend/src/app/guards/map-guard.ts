@@ -11,8 +11,6 @@ import { AuthService } from '../services/auth.service';
 
 @Injectable({ providedIn: 'root' })
 export class MapGuard implements CanActivate {
-
-  //TODO: remove comments
   constructor(private authService: AuthService, private router: Router) {}
 
   canActivate(
@@ -24,11 +22,7 @@ export class MapGuard implements CanActivate {
     | Promise<boolean | UrlTree>
     | Observable<boolean | UrlTree> {
     return this.authService.user.pipe(
-      //takes only the first emitted value from an observable and then completes it
-      //which makes observable stop emitting, and allows guard to allow navigation
       take(1),
-
-      //transforms the emitted user into true or UrlTree
       map((user) => {
         const isAuth = user ? true : false;
         if (isAuth) {

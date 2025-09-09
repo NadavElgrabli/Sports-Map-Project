@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -9,12 +11,10 @@ import { HomePageComponent } from './components/home-page/home-page.component';
 import { LoginFormComponent } from './components/login-form/login-form.component';
 import { SignupFormComponent } from './components/signup-form/signup-form.component';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
 import { LoadingSpinnerComponent } from './shared/loading-spinner/loading-spinner.component';
 import { SharedModule } from './shared/shared.module';
 
-//TODO: seperate imports of angular from the rest
+//TODO (DONE): seperate imports of angular from the rest
 
 @NgModule({
   declarations: [
@@ -25,7 +25,6 @@ import { SharedModule } from './shared/shared.module';
     LoginFormComponent,
     SignupFormComponent,
     PageNotFoundComponent,
-    LoadingSpinnerComponent, // TODO: Can delete this (?)
   ],
   imports: [
     BrowserModule,
