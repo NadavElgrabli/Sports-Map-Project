@@ -38,6 +38,8 @@ export class MapLiveComponent implements OnInit, OnDestroy {
     this.userSub = this.authService.user.subscribe((user) => {
       this.loggedInUser = user;
       if (user) {
+
+        //make sure that when initmap is called the map container exists in DOM
         setTimeout(() => this.initMap(), 0);
       }
     });
@@ -53,12 +55,19 @@ export class MapLiveComponent implements OnInit, OnDestroy {
     if (!this.loggedInUser) return;
 
     this.mapService.initMap(
+      //The HTML <div> where the map is rendered
       this.mapContainer.nativeElement,
+
+      //center
       [
         this.loggedInUser.currentLocation.longitude,
         this.loggedInUser.currentLocation.latitude,
       ],
+
+      //right click handler to add image / video
       (e) => this.addMediaPrompt(e),
+
+      //on load, runs after map loads
       () => {
         this.addOrUpdateMarker(this.loggedInUser!);
 

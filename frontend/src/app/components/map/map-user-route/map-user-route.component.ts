@@ -61,6 +61,7 @@ export class MapUserRouteComponent implements OnInit, OnDestroy {
       }
     );
 
+    //pull the reference back into the component's map
     this.map = this.mapService.getMap();
 
     // ensure proper render after Angular paints

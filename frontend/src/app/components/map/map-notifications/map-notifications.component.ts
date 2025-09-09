@@ -51,15 +51,20 @@ export class MapNotificationsComponent implements OnInit, OnDestroy {
         const loggedLat = Number(this.loggedInUser!.currentLocation.latitude);
         const loggedLng = Number(this.loggedInUser!.currentLocation.longitude);
 
+        //create a new array containing only the friends who satisfy the condition
         this.nearByUsers = friends.filter((u) => {
           const userLat = Number(u.currentLocation.latitude);
           const userLng = Number(u.currentLocation.longitude);
+
+          //calculate distance between loggedin user and his friend
           const distance = this.friendsService.getDistance(
             loggedLat,
             loggedLng,
             userLat,
             userLng
           );
+
+          //friends filter keeps only users who return true
           return distance <= this.radius;
         });
       });

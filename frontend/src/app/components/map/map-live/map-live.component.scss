@@ -3,6 +3,12 @@
   height: 100%;
 }
 
+// marker elements are created dynamically inside the map service, thats why angular doesnt
+// see them directly,  (they are created with: document.createElement('div')
+//dynamically rendred components won't get styles int he scss of a component
+//host: from this components context
+// ng deep: letting your CSS reach deep into DOM elements 
+//created outside Angular (like your Mapbox markers).
 :host ::ng-deep .marker-logged-in {
   width: 10px;
   height: 10px;

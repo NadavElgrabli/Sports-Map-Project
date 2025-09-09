@@ -31,6 +31,7 @@ export class FriendsService {
     }
   }
 
+  //returns how far apart are two points on Earth, in km
   getDistance(lat1: number, lng1: number, lat2: number, lng2: number): number {
     const R = 6371;
     const dLat = this.deg2rad(lat2 - lat1);
@@ -40,6 +41,7 @@ export class FriendsService {
     return R * c;
   }
 
+  //  convert degrees to radians
   private deg2rad(deg: number): number {
     return deg * (Math.PI / 180);
   }

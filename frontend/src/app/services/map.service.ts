@@ -26,8 +26,10 @@ export class MapService {
       zoom: 15,
     });
 
+    //Hooks into the right-click event (context menu) on the map.
     this.map.on('contextmenu', onRightClick);
 
+    //it will be executed once the map is fully loaded (useful for drawing markers or trails.)
     if (onLoad) {
       this.map.on('load', onLoad);
     }
@@ -47,11 +49,15 @@ export class MapService {
     const colorClass = isLoggedIn ? 'marker-logged-in' : 'marker-friend';
 
     if (existingMarker) {
+
+      // just move the existing marker to the new location
       existingMarker.setLngLat([
         user.currentLocation.longitude,
         user.currentLocation.latitude,
       ]);
     } else {
+
+      //create a new marker
       const el = document.createElement('div');
       el.className = colorClass;
 
@@ -63,6 +69,7 @@ export class MapService {
         .setPopup(new mapboxgl.Popup({ offset: 25 }).setText(user.username))
         .addTo(this.map);
 
+      // saves this marker in the userMarkers map so it can be updated next time
       this.userMarkers.set(user.id, marker);
     }
   }

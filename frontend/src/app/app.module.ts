@@ -11,9 +11,7 @@ import { SignupFormComponent } from './components/signup-form/signup-form.compon
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import { AuthService } from './services/auth.service';
 import { LoadingSpinnerComponent } from './shared/loading-spinner/loading-spinner.component';
-import { MapService } from './services/map.service';
 import { SharedModule } from './shared/shared.module';
 
 @NgModule({
