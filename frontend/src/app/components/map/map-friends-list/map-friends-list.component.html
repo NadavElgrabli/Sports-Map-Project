@@ -11,6 +11,7 @@
   </label>
 
   <ul>
+    <!-- pass distance to the directive input -->
     <li
       *ngFor="let friend of friends"
       [appCloseUsersHighlight]="
@@ -24,6 +25,8 @@
     >
       {{ friend.username }}
       <span *ngIf="sortBy === 'weight'"> - {{ friend.weight }}kg</span>
+
+      <!-- make the numbers round to 1 digit with atleast one number -->
       <span *ngIf="sortBy === 'distance'">
         -
         {{
