@@ -5,8 +5,6 @@ import { GeoService } from './geo.service';
 
 @Injectable({ providedIn: 'root' })
 export class FriendsService {
-  // TODO (DONE): rethink about the logic of the service (we usually (not always) have service that are "dataGetters", and services with logic, we usually seperate them.)
-  //Also consider seperating functions here to seperate services
   constructor(private http: HttpClient, private geoService: GeoService) {}
 
   getFriends(userId: number) {

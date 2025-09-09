@@ -17,24 +17,19 @@ export class MapFriendsListComponent {
   constructor(
     private authService: AuthService,
     private friendsService: FriendsService,
-    private geoService: GeoService // ✅ inject geo service
+    private geoService: GeoService
   ) {}
 
   ngOnInit() {
     this.authService.user.subscribe((user) => {
       this.loggedInUser = user;
-      if (user) {
-        // todo: no scope for 1 line
-        this.loadFriends();
-      }
+      if (user) this.loadFriends();
     });
   }
 
   loadFriends() {
-    if (!this.loggedInUser) return; //todo: do we need this check?
-
     this.friendsService
-      .getFriends(this.loggedInUser.id)
+      .getFriends(this.loggedInUser!.id)
       .subscribe((friends) => {
         this.friends = this.friendsService.sortFriends(
           friends,
@@ -44,7 +39,6 @@ export class MapFriendsListComponent {
       });
   }
 
-  // todo(done): underline before html functions
   _sortFriends() {
     if (!this.loggedInUser) return;
 
@@ -58,6 +52,6 @@ export class MapFriendsListComponent {
   getDistance(lat1: number, lng1: number, lat2: number, lng2: number): number {
     console.log('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA');
     // todo: explain what happening here
-    return this.geoService.getDistance(lat1, lng1, lat2, lng2); // ✅ fixed to use GeoService
+    return this.geoService.getDistance(lat1, lng1, lat2, lng2);
   }
 }
