@@ -1,11 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { User } from '../models/user.model';
+import { GeoService } from './geo.service';
 
 @Injectable({ providedIn: 'root' })
-export class FriendsService { // cr: config prettier for our conventoins
-  // TODO: rethink about the logic of the service (dataGetter)
-  constructor(private http: HttpClient) {}
+export class FriendsService {
+  // TODO (DONE): rethink about the logic of the service (we usually (not always) have service that are "dataGetters", and services with logic, we usually seperate them.)
+  //Also consider seperating functions here to seperate services
+  constructor(private http: HttpClient, private geoService: GeoService) {}
 
   getFriends(userId: number) {
     return this.http.get<User[]>(
@@ -18,7 +20,7 @@ export class FriendsService { // cr: config prettier for our conventoins
     loggedInUser: User | null,
     sortBy: 'name' | 'weight' | 'distance'
   ): User[] {
-    // todo: make this function 3-4 rows
+    // TODO: make this function 3-4 rows (think of SOLID, what would happen if i wanted to add a new sorting type?)
     if (!loggedInUser) return friends;
 
     switch (sortBy) {
@@ -32,13 +34,13 @@ export class FriendsService { // cr: config prettier for our conventoins
         const loggedLat = Number(loggedInUser.currentLocation.latitude);
         const loggedLng = Number(loggedInUser.currentLocation.longitude);
         return [...friends].sort((a, b) => {
-          const distA = this.getDistance(
+          const distA = this.geoService.getDistance(
             loggedLat,
             loggedLng,
             Number(a.currentLocation.latitude),
             Number(a.currentLocation.longitude)
           );
-          const distB = this.getDistance(
+          const distB = this.geoService.getDistance(
             loggedLat,
             loggedLng,
             Number(b.currentLocation.latitude),
@@ -49,24 +51,5 @@ export class FriendsService { // cr: config prettier for our conventoins
       default:
         return friends;
     }
-  }
-
-  //returns how far apart are two points on Earth, in km
-  getDistance(lat1: number, lng1: number, lat2: number, lng2: number): number {
-    const R = 6371;
-    const dLat = this.deg2rad(lat2 - lat1);
-    const dLng = this.deg2rad(lng2 - lng1);
-    const a =
-      Math.sin(dLat / 2) ** 2 +
-      Math.cos(this.deg2rad(lat1)) *
-        Math.cos(this.deg2rad(lat2)) *
-        Math.sin(dLng / 2) ** 2;
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    return R * c;
-  }
-
-  //  convert degrees to radians
-  private deg2rad(deg: number): number {
-    return deg * (Math.PI / 180);
   }
 }

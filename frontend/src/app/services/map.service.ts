@@ -5,7 +5,7 @@ import { User } from '../models/user.model';
 @Injectable({ providedIn: 'root' })
 export class MapService {
   private map!: MapboxMap;
-  private userMarkers: Map<number, Marker> = new Map(); // key user id, value marker
+  private userMarkers: Map<number, Marker> = new Map();
   private mediaMarkers: Marker[] = [];
 
   constructor() {
@@ -23,14 +23,11 @@ export class MapService {
       container,
       style: 'mapbox://styles/mapbox/streets-v11',
       center,
-      zoom: 15, //TODO: for constants (15), under shared folder, create a folder for constants, under constants folder create file for map constants 
+      zoom: 15, //TODO: for constants (15), under shared folder, create a folder for constants, under constants folder create file for map constants
     });
 
-    //TODO: remove all comments form the code
-    //Hooks into the right-click event (context menu) on the map.
     this.map.on('contextmenu', onRightClick);
 
-    //it will be executed once the map is fully loaded (useful for drawing markers or trails.)
     if (onLoad) {
       this.map.on('load', onLoad);
     }
@@ -42,7 +39,6 @@ export class MapService {
     return this.map;
   }
 
-  // Add or update a single user marker
   addOrUpdateMarker(user: User, isLoggedIn: boolean): void {
     if (!this.map) return;
 
@@ -50,16 +46,12 @@ export class MapService {
     const colorClass = isLoggedIn ? 'marker-logged-in' : 'marker-friend';
 
     if (existingMarker) {
-
-      // just move the existing marker to the new location
       existingMarker.setLngLat([
         user.currentLocation.longitude,
         user.currentLocation.latitude,
       ]);
     } else {
-
-      //TODO: if the comment exists, its probably less clear -> seperate to a seperate function
-      //create a new marker
+      //TODO: seperate to a seperate function here?
       const el = document.createElement('div');
       el.className = colorClass;
 
@@ -68,44 +60,34 @@ export class MapService {
           user.currentLocation.longitude,
           user.currentLocation.latitude,
         ])
-        //TODO: look up for constant
+        //TODO: look up for what to do with this constant (25)
         .setPopup(new mapboxgl.Popup({ offset: 25 }).setText(user.username))
         .addTo(this.map);
 
-      // saves this marker in the userMarkers map so it can be updated next time
       this.userMarkers.set(user.id, marker);
     }
   }
 
-  // Draw a trail for a user
   drawTrail(user: User, color: string): void {
     if (!this.map || !user.trail || user.trail.length === 0) return;
 
-    //turn the array of trail points to [[lion1, lat1], [lon2, lat2]] - the format that mapbox needs
     const coordinates = user.trail.map((tp) => [
       tp.location.longitude,
       tp.location.latitude,
     ]);
 
-    //TODO: we set the data twice (type, geo, properties) so just put it into a variable to avoid repetition 
-
-    //each trail given a unique id (user id 7, then trail is trail-7)
+    //TODO: we set the data twice (type, geo, properties) so just put it into a variable to avoid repetition
     const sourceId = `trail-${user.id}`;
-
-    //If we’ve already drawn this user’s trail before - redraw the whole trail with the new line at the end
 
     //TODO: calling getSource twice is unecessary, place it into a const to avoid double call
     if (this.map.getSource(sourceId)) {
-      (this.map.getSource(sourceId) as any).setData({ //TODO: avoid using any, if you know what the return type is (here you know)
+      (this.map.getSource(sourceId) as any).setData({
+        //TODO: avoid using any, if you know what the return type is (here you know)
         type: 'Feature',
         geometry: { type: 'LineString', coordinates }, //TODO: 'LineString' is problematic due to typos, make it  into a cosntant
         properties: {},
       });
-
-      //If the trail doesn’t exist yet:
     } else {
-
-      //Add a new data source (addSource) with the trail coordinates.
       this.map.addSource(sourceId, {
         type: 'geojson',
         data: {
@@ -115,7 +97,6 @@ export class MapService {
         },
       });
 
-      //Add a layer (addLayer) that tells Mapbox how to render that source.
       this.map.addLayer({
         id: `trail-layer-${user.id}`,
         type: 'line',
@@ -126,7 +107,6 @@ export class MapService {
     }
   }
 
-  // Draw media markers for a user
   drawMediaMarkers(user: User): void {
     if (!this.map || !user.trail) return;
 
@@ -167,13 +147,11 @@ export class MapService {
     });
   }
 
-  // Clear all media markers
   clearMediaMarkers(): void {
     this.mediaMarkers.forEach((marker) => marker.remove());
     this.mediaMarkers = [];
   }
 
-  // Optional: clear all user markers
   clearUserMarkers(): void {
     this.userMarkers.forEach((marker) => marker.remove());
     this.userMarkers.clear();

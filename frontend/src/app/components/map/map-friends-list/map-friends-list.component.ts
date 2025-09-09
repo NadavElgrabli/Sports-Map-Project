@@ -2,11 +2,12 @@ import { Component } from '@angular/core';
 import { User } from '../../../models/user.model';
 import { AuthService } from '../../../services/auth.service';
 import { FriendsService } from '../../../services/friends.service';
+import { GeoService } from '../../../services/geo.service';
 
 @Component({
   selector: 'app-map-friends-list',
   templateUrl: './map-friends-list.component.html',
-  styleUrl: './map-friends-list.component.scss',
+  styleUrls: ['./map-friends-list.component.scss'],
 })
 export class MapFriendsListComponent {
   loggedInUser!: User | null;
@@ -15,7 +16,8 @@ export class MapFriendsListComponent {
 
   constructor(
     private authService: AuthService,
-    private friendsService: FriendsService
+    private friendsService: FriendsService,
+    private geoService: GeoService // ✅ inject geo service
   ) {}
 
   ngOnInit() {
@@ -29,7 +31,7 @@ export class MapFriendsListComponent {
   }
 
   loadFriends() {
-    if (!this.loggedInUser) return; //todo: :)
+    if (!this.loggedInUser) return; //todo: do we need this check?
 
     this.friendsService
       .getFriends(this.loggedInUser.id)
@@ -42,8 +44,8 @@ export class MapFriendsListComponent {
       });
   }
 
-  // todo: underline before html functions + check all the other conventions in all of the project
-  sortFriends() {
+  // todo(done): underline before html functions
+  _sortFriends() {
     if (!this.loggedInUser) return;
 
     this.friends = this.friendsService.sortFriends(
@@ -54,8 +56,8 @@ export class MapFriendsListComponent {
   }
 
   getDistance(lat1: number, lng1: number, lat2: number, lng2: number): number {
-    console.log('erezzzzzzzzzzzzzz');
+    console.log('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA');
     // todo: explain what happening here
-    return this.friendsService.getDistance(lat1, lng1, lat2, lng2);
+    return this.geoService.getDistance(lat1, lng1, lat2, lng2); // ✅ fixed to use GeoService
   }
 }

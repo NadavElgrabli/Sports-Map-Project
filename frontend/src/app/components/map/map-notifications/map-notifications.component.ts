@@ -3,6 +3,7 @@ import { User } from '../../../models/user.model';
 import { interval, Subscription } from 'rxjs';
 import { AuthService } from '../../../services/auth.service';
 import { FriendsService } from '../../../services/friends.service';
+import { GeoService } from '../../../services/geo.service';
 
 @Component({
   selector: 'app-map-notifications',
@@ -17,11 +18,12 @@ export class MapNotificationsComponent implements OnInit, OnDestroy {
   userSub!: Subscription;
   intervalSub!: Subscription;
 
-  radius: number = 1; // default 1 km
+  radius: number = 1;
 
   constructor(
     private authService: AuthService,
-    private friendsService: FriendsService
+    private friendsService: FriendsService,
+    private geoService: GeoService
   ) {}
 
   ngOnInit() {
@@ -39,11 +41,6 @@ export class MapNotificationsComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnDestroy() {
-    if (this.userSub) this.userSub.unsubscribe();
-    if (this.intervalSub) this.intervalSub.unsubscribe();
-  }
-
   updateNearbyUsers() {
     //TODO: uncessecary check
     if (!this.loggedInUser) return;
@@ -55,22 +52,24 @@ export class MapNotificationsComponent implements OnInit, OnDestroy {
         const loggedLat = Number(this.loggedInUser!.currentLocation.latitude);
         const loggedLng = Number(this.loggedInUser!.currentLocation.longitude);
 
-        //create a new array containing only the friends who satisfy the condition
         this.nearByUsers = friends.filter((u) => {
           const userLat = Number(u.currentLocation.latitude);
           const userLng = Number(u.currentLocation.longitude);
 
-          //calculate distance between loggedin user and his friend
-          const distance = this.friendsService.getDistance(
+          const distance = this.geoService.getDistance(
             loggedLat,
             loggedLng,
             userLat,
             userLng
           );
 
-          //friends filter keeps only users who return true
           return distance <= this.radius;
         });
       });
+  }
+
+  ngOnDestroy() {
+    if (this.userSub) this.userSub.unsubscribe();
+    if (this.intervalSub) this.intervalSub.unsubscribe();
   }
 }

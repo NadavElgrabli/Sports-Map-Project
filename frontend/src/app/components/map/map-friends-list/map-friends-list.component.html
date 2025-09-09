@@ -3,7 +3,7 @@
 
   <label>
     Sort by:
-    <select [(ngModel)]="sortBy" (change)="sortFriends()">
+    <select [(ngModel)]="sortBy" (change)="_sortFriends()">
       <option value="name">Name</option>
       <option value="weight">Weight</option>
       <option value="distance">Distance</option>
@@ -31,7 +31,7 @@
         <!-- TODO: no need "+" -->
         {{
           getDistance(
-            +loggedInUser.currentLocation.latitude, 
+            +loggedInUser.currentLocation.latitude,
             +loggedInUser.currentLocation.longitude,
             +friend.currentLocation.latitude,
             +friend.currentLocation.longitude
