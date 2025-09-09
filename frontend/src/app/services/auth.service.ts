@@ -3,14 +3,12 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, tap } from 'rxjs';
 import { User } from '../models/user.model';
 import { Router } from '@angular/router';
-import {
-  SignUpResponseData,
-  LoginResponseData,
-} from '../interfaces/auth.interface';
+import { UserResponse } from '../interfaces/user-response.interface';
+import { LoginResponseData } from '../interfaces/login-response.interface';
+
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-
   //TODO: where do you unsubscribe?
   user = new BehaviorSubject<User | null>(null);
   private tokenExpirationTimer: any;
@@ -24,8 +22,8 @@ export class AuthService {
     weight: number,
     address: string
   ) {
-    //TODO: read about angular environment, why we need it , what it is, what we put there and 
-    return this.http.post<SignUpResponseData>(
+    //TODO: read about angular environment, why we need it , what it is, what we put there and
+    return this.http.post<UserResponse>(
       'http://localhost:5202/api/users/signup',
       { username, password, dateOfBirth, weight, address }
     );
@@ -36,7 +34,7 @@ export class AuthService {
   login(username: string, password: string) {
     return this.http
       .post<LoginResponseData>('http://localhost:5202/api/users/login', {
-        username : username,
+        username: username,
         password,
       })
       .pipe(
@@ -61,8 +59,8 @@ export class AuthService {
           //TODO: This option below is better, do it that way
           const loggedUser2 = {
             ...resData.user,
-            expirationDate:expirationDate
-          }
+            expirationDate: expirationDate,
+          };
 
           this.user.next(loggedUser);
           //TODO: Avoid touching the local storage from any service / component. Create a service that handles the local storage managment

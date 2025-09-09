@@ -1,12 +1,7 @@
 import { Location } from './location.interface';
+import { Media } from './media.interface';
 
-
-//TODO: Seperate to 2 files
-export interface Media {
-  url: string;
-  type: 'image' | 'video';
-}
-
+//TODO(DONE): Seperate to 2 files
 export interface TrailPoint {
   location: Location;
   media: Media[];

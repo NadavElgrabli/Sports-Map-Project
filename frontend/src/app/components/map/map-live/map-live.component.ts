@@ -11,7 +11,7 @@ import { AuthService } from '../../../services/auth.service';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { Subscription, interval, forkJoin } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { TrailPoint } from '../../../interfaces/trail.interface';
+import { TrailPoint } from '../../../interfaces/trail-point.interface';
 import { MapService } from '../../../services/map.service';
 
 @Component({
@@ -38,7 +38,6 @@ export class MapLiveComponent implements OnInit, OnDestroy {
     this.userSub = this.authService.user.subscribe((user) => {
       this.loggedInUser = user;
       if (user) {
-
         //make sure that when initmap is called the map container exists in DOM
         setTimeout(() => this.initMap(), 0);
       }
@@ -136,7 +135,6 @@ export class MapLiveComponent implements OnInit, OnDestroy {
         }
       )
       .subscribe(() => {
-
         //TODO: dont work with alert, only angular material dialogue
         alert('Media added!');
         this.updateUsers();
