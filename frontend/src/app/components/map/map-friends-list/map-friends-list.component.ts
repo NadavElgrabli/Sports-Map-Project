@@ -12,6 +12,7 @@ import { GeoService } from '../../../services/geo.service';
 export class MapFriendsListComponent {
   loggedInUser!: User | null;
   friends: User[] = [];
+  distanceFromUserToFriends = new Map<number, number>();
   sortBy: 'name' | 'weight' | 'distance' = 'name'; // todo: if the type is in multiple use - give it name
 
   constructor(
@@ -36,6 +37,11 @@ export class MapFriendsListComponent {
           this.loggedInUser,
           this.sortBy
         );
+        this.distanceFromUserToFriends =
+          this.geoService.computeDistancesFromUserToFriends(
+            this.loggedInUser!,
+            this.friends
+          );
       });
   }
 
@@ -47,11 +53,13 @@ export class MapFriendsListComponent {
       this.loggedInUser,
       this.sortBy
     );
+    this.distanceFromUserToFriends = this.geoService.computeDistancesFromUserToFriends(
+      this.loggedInUser,
+      this.friends
+    );
   }
 
-  getDistance(lat1: number, lng1: number, lat2: number, lng2: number): number {
-    console.log('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA');
-    // todo: explain what happening here
-    return this.geoService.getDistance(lat1, lng1, lat2, lng2);
+  _getDistanceToFriend(friend: User): number {
+    return this.distanceFromUserToFriends.get(friend.id) || 0;
   }
 }

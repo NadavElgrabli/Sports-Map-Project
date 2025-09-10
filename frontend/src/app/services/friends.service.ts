@@ -18,7 +18,7 @@ export class FriendsService {
     loggedInUser: User | null,
     sortBy: 'name' | 'weight' | 'distance'
   ): User[] {
-    // TODO: make this function 3-4 rows (think of SOLID, what would happen if i wanted to add a new sorting type?)
+    // TODO: make this function 3-4 rows (think of SOLID, what would happen if i wanted to add a new sorting type?) tip: handlers
     if (!loggedInUser) return friends;
 
     switch (sortBy) {

@@ -13,28 +13,13 @@
   <ul>
     <li
       *ngFor="let friend of friends"
-      [appCloseUsersHighlight]="
-        getDistance(
-          loggedInUser.currentLocation.latitude,
-          loggedInUser.currentLocation.longitude,
-          friend.currentLocation.latitude,
-          friend.currentLocation.longitude
-        )
-      "
+      [appCloseUsersHighlight]="_getDistanceToFriend(friend)"
     >
       {{ friend.username }}
       <span *ngIf="sortBy === 'weight'"> - {{ friend.weight }}kg</span>
 
       <span *ngIf="sortBy === 'distance'">
-        {{
-          getDistance(
-            loggedInUser.currentLocation.latitude,
-            loggedInUser.currentLocation.longitude,
-            friend.currentLocation.latitude,
-            friend.currentLocation.longitude
-          ) | number : "1.0-1"
-        }}
-        km
+        {{ _getDistanceToFriend(friend) | number : "1.0-1" }} km
       </span>
     </li>
   </ul>
