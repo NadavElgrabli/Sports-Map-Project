@@ -5,15 +5,20 @@ import { User } from '../models/user.model';
 import { Router } from '@angular/router';
 import { UserResponse } from '../interfaces/user-response.interface';
 import { LoginResponseData } from '../interfaces/login-response.interface';
-
+import { environment } from '../../environments/environment';
+import { MILLISECONDS_IN_SECOND } from '../shared/constants/time.constants';
+import { LocalStorageService } from './local-storage.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  //TODO: where do you unsubscribe?
-  user = new BehaviorSubject<User | null>(null);
+  user = new BehaviorSubject<User | null>(null); //TODO: where do you unsubscribe?
   private tokenExpirationTimer: any;
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    private localStorageService: LocalStorageService 
+  ) {}
 
   signup(
     username: string,
@@ -22,25 +27,25 @@ export class AuthService {
     weight: number,
     address: string
   ) {
-    //TODO: read about angular environment, why we need it , what it is, what we put there
-    return this.http.post<UserResponse>(
-      'http://localhost:5202/api/users/signup',
-      { username, password, dateOfBirth, weight, address }
-    );
+    return this.http.post<UserResponse>(`${environment.apiUrl}/users/signup`, {
+      username: username,
+      password: password,
+      dateOfBirth: dateOfBirth,
+      weight: weight,
+      address: address,
+    });
   }
 
-  //TODO: if frontend changes name of property, and the backend doesnt change it, then we can only change the name of the property after ":" when
-  // we rename the symbol of username for example, and that is why it should always look like for example: username : username
   login(username: string, password: string) {
     return this.http
-      .post<LoginResponseData>('http://localhost:5202/api/users/login', {
+      .post<LoginResponseData>(`${environment.apiUrl}/users/login`, {
         username: username,
-        password,
+        password: password,
       })
       .pipe(
         tap((resData) => {
           const expirationDate = new Date(
-            new Date().getTime() + resData.expiresIn * 1000 //TODO: call it a constant
+            new Date().getTime() + resData.expiresIn * MILLISECONDS_IN_SECOND
           );
           const loggedUser = new User(
             resData.user.id,
@@ -55,50 +60,34 @@ export class AuthService {
             resData.user.friends
           );
 
-          //TODO: read the differences between type / class/ interface
-          //TODO: This option below is better, do it that way (i made a short example for you)
-          const loggedUser2 = {
-            ...resData.user,
-            expirationDate: expirationDate,
-          };
+          //TODO: read the differences between type / class/ interface (should this should be type? understand why)
+          //TODO: This option below is better, do it that way (i am lazy but it should be type, i made a short example for you. You must know the difference between type and const and when to use each)
+          // const loggedUser2 = {
+          //   ...resData.user,
+          //   expirationDate: expirationDate,
+          // };
 
           this.user.next(loggedUser);
-          //TODO: Avoid touching the local storage from any service / component. Create a service that handles the local storage managment
-          //TODO: Dont access the userData as a string, make it a const that the service of the local storage will handle
-          localStorage.setItem('userData', JSON.stringify(loggedUser));
-          this.autoLogout(resData.expiresIn * 1000);
+          this.localStorageService.setUser(loggedUser);
+          this.autoLogout(resData.expiresIn * MILLISECONDS_IN_SECOND);
         })
       );
   }
 
   autoLogin() {
-    const userData: any = JSON.parse(localStorage.getItem('userData')!);
-    if (!userData) return;
-
-    const loadedUser = new User(
-      userData.id,
-      userData.username,
-      userData.password,
-      userData.dateOfBirth,
-      userData.weight,
-      userData.address,
-      userData.expiresIn,
-      new Date(userData.expirationDate),
-      userData.currentLocation,
-      userData.friends
-    );
+    const loadedUser = this.localStorageService.getUser();
+    if (!loadedUser) return;
 
     if (loadedUser.isActive) {
       this.user.next(loadedUser);
       const expirationDuration =
-        new Date(userData.expirationDate).getTime() - new Date().getTime();
+        new Date(loadedUser.expirationDate).getTime() - new Date().getTime();
       this.autoLogout(expirationDuration);
     } else {
       this.logout();
     }
   }
 
-  //TODO: read about 'ng serve' - what happens after we log in, close the chrome, and return to the website, and how does it affect the login / log out?
   autoLogout(expirationDuration: number) {
     this.tokenExpirationTimer = setTimeout(
       () => this.logout(),
@@ -109,7 +98,7 @@ export class AuthService {
   logout() {
     this.user.next(null);
     this.router.navigate(['login']);
-    localStorage.removeItem('userData');
+    this.localStorageService.removeUser();
     if (this.tokenExpirationTimer) clearTimeout(this.tokenExpirationTimer);
     this.tokenExpirationTimer = null;
   }

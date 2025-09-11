@@ -17,6 +17,6 @@ export class User {
   ) {}
 
   get isActive() {
-    return !!this.expirationDate && new Date() <= this.expirationDate;
+    return this.expirationDate ? new Date() <= this.expirationDate : false;
   }
 }
