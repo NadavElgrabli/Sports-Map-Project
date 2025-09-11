@@ -22,7 +22,7 @@ export class AuthService {
     weight: number,
     address: string
   ) {
-    //TODO: read about angular environment, why we need it , what it is, what we put there and
+    //TODO: read about angular environment, why we need it , what it is, what we put there
     return this.http.post<UserResponse>(
       'http://localhost:5202/api/users/signup',
       { username, password, dateOfBirth, weight, address }
@@ -56,7 +56,7 @@ export class AuthService {
           );
 
           //TODO: read the differences between type / class/ interface
-          //TODO: This option below is better, do it that way
+          //TODO: This option below is better, do it that way (i made a short example for you)
           const loggedUser2 = {
             ...resData.user,
             expirationDate: expirationDate,

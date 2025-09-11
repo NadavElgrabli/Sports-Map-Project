@@ -1,6 +1,16 @@
 import { Injectable } from '@angular/core';
 import mapboxgl, { Map as MapboxMap, MapMouseEvent, Marker } from 'mapbox-gl';
 import { User } from '../models/user.model';
+import {
+  MAP_DEFAULT_ZOOM,
+  MAP_POPUP_OFFSET,
+  LINE_STRING,
+  MAP_STYLE,
+} from '../shared/constants/map.constants';
+import {
+  TRAIL_MARKER_SIZE,
+  TRAIL_MARKER_BORDER_RADIUS,
+} from '../shared/constants/marker.constants';
 
 @Injectable({ providedIn: 'root' })
 export class MapService {
@@ -21,9 +31,9 @@ export class MapService {
   ): MapboxMap {
     this.map = new mapboxgl.Map({
       container,
-      style: 'mapbox://styles/mapbox/streets-v11',
+      style: MAP_STYLE,
       center,
-      zoom: 15, //TODO: for constants (15), under shared folder, create a folder for constants, under constants folder create file for map constants
+      zoom: MAP_DEFAULT_ZOOM, 
     });
 
     this.map.on('contextmenu', onRightClick);
@@ -60,8 +70,11 @@ export class MapService {
           user.currentLocation.longitude,
           user.currentLocation.latitude,
         ])
-        //TODO: look up for what to do with this constant (25)
-        .setPopup(new mapboxgl.Popup({ offset: 25 }).setText(user.username))
+        .setPopup(
+          new mapboxgl.Popup({ offset: MAP_POPUP_OFFSET }).setText(
+            user.username
+          )
+        )
         .addTo(this.map);
 
       this.userMarkers.set(user.id, marker);
@@ -84,7 +97,7 @@ export class MapService {
       (this.map.getSource(sourceId) as any).setData({
         //TODO: avoid using any, if you know what the return type is (here you know)
         type: 'Feature',
-        geometry: { type: 'LineString', coordinates }, //TODO: 'LineString' is problematic due to typos, make it  into a cosntant
+        geometry: { type: LINE_STRING, coordinates },
         properties: {},
       });
     } else {
@@ -92,7 +105,7 @@ export class MapService {
         type: 'geojson',
         data: {
           type: 'Feature',
-          geometry: { type: 'LineString', coordinates },
+          geometry: { type: LINE_STRING, coordinates },
           properties: {},
         },
       });
@@ -116,9 +129,9 @@ export class MapService {
           const el = document.createElement('div');
           //TODO: always when creating an element dynamically, write it inside a const
           el.className = 'trail-media-marker';
-          el.style.width = '20px';
-          el.style.height = '20px';
-          el.style.borderRadius = '50%';
+          el.style.width = `${TRAIL_MARKER_SIZE}px`;
+          el.style.height = `${TRAIL_MARKER_SIZE}px`;
+          el.style.borderRadius = TRAIL_MARKER_BORDER_RADIUS;
           el.style.cursor = 'pointer';
           el.style.backgroundSize = 'cover';
           el.style.backgroundPosition = 'center';
@@ -133,7 +146,7 @@ export class MapService {
           const marker = new mapboxgl.Marker({ element: el })
             .setLngLat([point.location.longitude, point.location.latitude])
             .setPopup(
-              new mapboxgl.Popup({ offset: 25 }).setHTML(
+              new mapboxgl.Popup({ offset: MAP_POPUP_OFFSET }).setHTML(
                 m.type === 'image'
                   ? `<img src="${m.url}" width="100">`
                   : `<video src="${m.url}" width="150" controls></video>`
