@@ -1,16 +1,33 @@
 import { Injectable } from '@angular/core';
 import mapboxgl, { Map as MapboxMap, MapMouseEvent, Marker } from 'mapbox-gl';
+import { GeoJSONSource } from 'mapbox-gl';
 import { User } from '../models/user.model';
 import {
   MAP_DEFAULT_ZOOM,
   MAP_POPUP_OFFSET,
-  LINE_STRING,
   MAP_STYLE,
 } from '../shared/constants/map.constants';
 import {
   TRAIL_MARKER_SIZE,
   TRAIL_MARKER_BORDER_RADIUS,
+  DEFAULT_VIDEO_MARKER_SVG,
+  MEDIA_MARKER_BG_POSITION,
+  MEDIA_MARKER_BG_REPEAT,
+  MEDIA_MARKER_BG_SIZE,
+  MEDIA_MARKER_CURSOR,
+  MEDIA_POPUP_IMAGE_WIDTH,
+  MEDIA_POPUP_VIDEO_WIDTH,
 } from '../shared/constants/marker.constants';
+import {
+  LINE_STRING_TYPE,
+  TRAIL_LINE_WIDTH,
+  TRAIL_LINE_COLOR,
+  TRAIL_LINE_JOIN,
+  TRAIL_LINE_CAP,
+} from '../shared/constants/trail.constants';
+import { environment } from '../../environments/environment';
+import { TrailPoint } from '../interfaces/trail-point.interface';
+import { Media } from '../interfaces/media.interface';
 
 @Injectable({ providedIn: 'root' })
 export class MapService {
@@ -19,9 +36,8 @@ export class MapService {
   private mediaMarkers: Marker[] = [];
 
   constructor() {
-    mapboxgl.accessToken =
-      'pk.eyJ1IjoiZWUxOTk2IiwiYSI6ImNtZjN1cnhtdDAwcHYya3I0cmhpNzF3bDkifQ.b4WP0iqLlxYqJAqstne1lA';
-  } //TODO: read about angular environment, why we need it , what it is, what we put there and why putting a token in the constructor is bad practice
+    mapboxgl.accessToken = environment.mapboxToken;
+  }
 
   initMap(
     container: HTMLElement,
@@ -33,7 +49,7 @@ export class MapService {
       container,
       style: MAP_STYLE,
       center,
-      zoom: MAP_DEFAULT_ZOOM, 
+      zoom: MAP_DEFAULT_ZOOM,
     });
 
     this.map.on('contextmenu', onRightClick);
@@ -61,24 +77,26 @@ export class MapService {
         user.currentLocation.latitude,
       ]);
     } else {
-      //TODO: seperate to a seperate function here?
-      const el = document.createElement('div');
-      el.className = colorClass;
-
-      const marker = new mapboxgl.Marker({ element: el })
-        .setLngLat([
-          user.currentLocation.longitude,
-          user.currentLocation.latitude,
-        ])
-        .setPopup(
-          new mapboxgl.Popup({ offset: MAP_POPUP_OFFSET }).setText(
-            user.username
-          )
-        )
-        .addTo(this.map);
-
+      const marker = this.createUserMarker(user, colorClass);
       this.userMarkers.set(user.id, marker);
     }
+  }
+
+  private createUserMarker(user: User, colorClass: string): Marker {
+    const el = document.createElement('div');
+    el.className = colorClass;
+
+    const marker = new mapboxgl.Marker({ element: el })
+      .setLngLat([
+        user.currentLocation.longitude,
+        user.currentLocation.latitude,
+      ])
+      .setPopup(
+        new mapboxgl.Popup({ offset: MAP_POPUP_OFFSET }).setText(user.username)
+      )
+      .addTo(this.map);
+
+    return marker;
   }
 
   drawTrail(user: User, color: string): void {
@@ -89,33 +107,32 @@ export class MapService {
       tp.location.latitude,
     ]);
 
-    //TODO: we set the data twice (type, geo, properties) so just put it into a variable to avoid repetition
-    const sourceId = `trail-${user.id}`;
+    const geojsonData: GeoJSON.Feature<GeoJSON.LineString, {}> = {
+      type: 'Feature',
+      geometry: { type: LINE_STRING_TYPE, coordinates },
+      properties: {},
+    };
 
-    //TODO: calling getSource twice is unecessary, place it into a const to avoid double call
-    if (this.map.getSource(sourceId)) {
-      (this.map.getSource(sourceId) as any).setData({
-        //TODO: avoid using any, if you know what the return type is (here you know)
-        type: 'Feature',
-        geometry: { type: LINE_STRING, coordinates },
-        properties: {},
-      });
+    const sourceId = `trail-${user.id}`;
+    const source = this.map.getSource(sourceId) as GeoJSONSource | undefined;
+
+    if (source) {
+      source.setData(geojsonData);
     } else {
       this.map.addSource(sourceId, {
         type: 'geojson',
-        data: {
-          type: 'Feature',
-          geometry: { type: LINE_STRING, coordinates },
-          properties: {},
-        },
+        data: geojsonData,
       });
 
       this.map.addLayer({
         id: `trail-layer-${user.id}`,
         type: 'line',
         source: sourceId,
-        layout: { 'line-join': 'round', 'line-cap': 'round' },
-        paint: { 'line-color': color, 'line-width': 4 },
+        layout: { 'line-join': TRAIL_LINE_JOIN, 'line-cap': TRAIL_LINE_CAP },
+        paint: {
+          'line-color': color ?? TRAIL_LINE_COLOR,
+          'line-width': TRAIL_LINE_WIDTH,
+        },
       });
     }
   }
@@ -126,38 +143,40 @@ export class MapService {
     user.trail.forEach((point) => {
       if (point.media && point.media.length > 0) {
         point.media.forEach((m) => {
-          const el = document.createElement('div');
-          //TODO: always when creating an element dynamically, write it inside a const
-          el.className = 'trail-media-marker';
-          el.style.width = `${TRAIL_MARKER_SIZE}px`;
-          el.style.height = `${TRAIL_MARKER_SIZE}px`;
-          el.style.borderRadius = TRAIL_MARKER_BORDER_RADIUS;
-          el.style.cursor = 'pointer';
-          el.style.backgroundSize = 'cover';
-          el.style.backgroundPosition = 'center';
-          el.style.backgroundRepeat = 'no-repeat';
-
-          if (m.type === 'image') {
-            el.style.backgroundImage = `url(${m.url})`;
-          } else {
-            el.style.backgroundImage = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20'%3E%3Ccircle cx='10' cy='10' r='10' fill='white'/%3E%3Cpolygon points='7,5 7,15 15,10' fill='%23FF9800'/%3E%3C/svg%3E")`;
-          }
-
-          const marker = new mapboxgl.Marker({ element: el })
-            .setLngLat([point.location.longitude, point.location.latitude])
-            .setPopup(
-              new mapboxgl.Popup({ offset: MAP_POPUP_OFFSET }).setHTML(
-                m.type === 'image'
-                  ? `<img src="${m.url}" width="100">`
-                  : `<video src="${m.url}" width="150" controls></video>`
-              )
-            )
-            .addTo(this.map);
-
+          const marker = this.createMediaMarker(point, m);
           this.mediaMarkers.push(marker);
         });
       }
     });
+  }
+
+  private createMediaMarker(point: TrailPoint, media: Media): Marker {
+    const el = document.createElement('div');
+    el.className = 'trail-media-marker';
+    el.style.width = `${TRAIL_MARKER_SIZE}px`;
+    el.style.height = `${TRAIL_MARKER_SIZE}px`;
+    el.style.borderRadius = TRAIL_MARKER_BORDER_RADIUS;
+    el.style.cursor = MEDIA_MARKER_CURSOR;
+    el.style.backgroundSize = MEDIA_MARKER_BG_SIZE;
+    el.style.backgroundPosition = MEDIA_MARKER_BG_POSITION;
+    el.style.backgroundRepeat = MEDIA_MARKER_BG_REPEAT;
+
+    el.style.backgroundImage =
+      media.type === 'image' ? `url(${media.url})` : DEFAULT_VIDEO_MARKER_SVG;
+
+    const popupHTML =
+      media.type === 'image'
+        ? `<img src="${media.url}" width="${MEDIA_POPUP_IMAGE_WIDTH}">`
+        : `<video src="${media.url}" width="${MEDIA_POPUP_VIDEO_WIDTH}" controls></video>`;
+
+    const marker = new mapboxgl.Marker({ element: el })
+      .setLngLat([point.location.longitude, point.location.latitude])
+      .setPopup(
+        new mapboxgl.Popup({ offset: MAP_POPUP_OFFSET }).setHTML(popupHTML)
+      )
+      .addTo(this.map);
+
+    return marker;
   }
 
   clearMediaMarkers(): void {

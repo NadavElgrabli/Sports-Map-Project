@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SportsShare.Api")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+07b96b382e8a41640ab88f9d4e4d26a968757111")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c9dc5ee383ba2b38a83e223ff8280e0952e63c00")]
 [assembly: System.Reflection.AssemblyProductAttribute("SportsShare.Api")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SportsShare.Api")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
