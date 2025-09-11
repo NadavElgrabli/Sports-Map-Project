@@ -11,13 +11,13 @@ import { LocalStorageService } from './local-storage.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  user = new BehaviorSubject<User | null>(null); //TODO: where do you unsubscribe?
+  user = new BehaviorSubject<User | null>(null);
   private tokenExpirationTimer: any;
 
   constructor(
     private http: HttpClient,
     private router: Router,
-    private localStorageService: LocalStorageService 
+    private localStorageService: LocalStorageService
   ) {}
 
   signup(

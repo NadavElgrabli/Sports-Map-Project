@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { User } from '../models/user.model';
 
-const USER_DATA_KEY = 'userData'; // single source of truth for the key
+const USER_DATA_KEY = 'userData';
 
 @Injectable({ providedIn: 'root' })
 export class LocalStorageService {
@@ -14,7 +14,6 @@ export class LocalStorageService {
     if (!data) return null;
 
     const parsed = JSON.parse(data);
-    // Convert back to User instance
     return new User(
       parsed.id,
       parsed.username,
