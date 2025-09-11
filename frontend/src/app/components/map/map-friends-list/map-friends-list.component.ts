@@ -3,6 +3,7 @@ import { User } from '../../../models/user.model';
 import { AuthService } from '../../../services/auth.service';
 import { FriendsService } from '../../../services/friends.service';
 import { GeoService } from '../../../services/geo.service';
+import { SortBy } from '../../../shared/types/sort-by.type';
 
 @Component({
   selector: 'app-map-friends-list',
@@ -13,7 +14,7 @@ export class MapFriendsListComponent {
   loggedInUser!: User | null;
   friends: User[] = [];
   distanceFromUserToFriends = new Map<number, number>();
-  sortBy: 'name' | 'weight' | 'distance' = 'name'; // todo: if the type is in multiple use - give it name
+  sortBy: SortBy = 'name';
 
   constructor(
     private authService: AuthService,
@@ -53,10 +54,11 @@ export class MapFriendsListComponent {
       this.loggedInUser,
       this.sortBy
     );
-    this.distanceFromUserToFriends = this.geoService.computeDistancesFromUserToFriends(
-      this.loggedInUser,
-      this.friends
-    );
+    this.distanceFromUserToFriends =
+      this.geoService.computeDistancesFromUserToFriends(
+        this.loggedInUser,
+        this.friends
+      );
   }
 
   _getDistanceToFriend(friend: User): number {

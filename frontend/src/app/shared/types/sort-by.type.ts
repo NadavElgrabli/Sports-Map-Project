@@ -1,0 +1,1 @@
+export type SortBy = 'name' | 'weight' | 'distance';

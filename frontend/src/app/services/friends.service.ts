@@ -1,7 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+
 import { User } from '../models/user.model';
 import { GeoService } from './geo.service';
+import { SortBy } from '../shared/types/sort-by.type';
+import { sortByName } from '../shared/handlers/sort-by-name.handler';
+import { sortByWeight } from '../shared/handlers/sort-by-weight.handler';
+import { sortByDistance } from '../shared/handlers/sort-by-distance.handler';
 
 @Injectable({ providedIn: 'root' })
 export class FriendsService {
@@ -16,38 +21,16 @@ export class FriendsService {
   sortFriends(
     friends: User[],
     loggedInUser: User | null,
-    sortBy: 'name' | 'weight' | 'distance'
+    sortBy: SortBy
   ): User[] {
-    // TODO: make this function 3-4 rows (think of SOLID, what would happen if i wanted to add a new sorting type?) tip: handlers
     if (!loggedInUser) return friends;
 
-    switch (sortBy) {
-      case 'name':
-        return [...friends].sort((a, b) =>
-          a.username.localeCompare(b.username)
-        );
-      case 'weight':
-        return [...friends].sort((a, b) => Number(a.weight) - Number(b.weight));
-      case 'distance':
-        const loggedLat = Number(loggedInUser.currentLocation.latitude);
-        const loggedLng = Number(loggedInUser.currentLocation.longitude);
-        return [...friends].sort((a, b) => {
-          const distA = this.geoService.getDistance(
-            loggedLat,
-            loggedLng,
-            Number(a.currentLocation.latitude),
-            Number(a.currentLocation.longitude)
-          );
-          const distB = this.geoService.getDistance(
-            loggedLat,
-            loggedLng,
-            Number(b.currentLocation.latitude),
-            Number(b.currentLocation.longitude)
-          );
-          return distA - distB;
-        });
-      default:
-        return friends;
-    }
+    const handlers = {
+      name: sortByName,
+      weight: sortByWeight,
+      distance: sortByDistance(this.geoService, loggedInUser),
+    };
+
+    return [...friends].sort(handlers[sortBy]);
   }
 }
