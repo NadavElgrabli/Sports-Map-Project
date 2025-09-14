@@ -16,8 +16,6 @@ export class LoginFormComponent {
   constructor(private authService: AuthService, private router: Router) {}
 
   onSubmit(form: NgForm) {
-    // console.log(form);
-
     const username = form.value.userName;
     const password = form.value.password;
 
@@ -25,7 +23,6 @@ export class LoginFormComponent {
 
     this.authService.login(username, password).subscribe(
       (res) => {
-        // console.log('Login response:', res);
         this.isLoading = false;
         this.router.navigate(['/map', res.user.id]);
       },

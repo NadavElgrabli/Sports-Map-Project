@@ -63,8 +63,7 @@ export class SignupFormComponent {
     this.authService
       .signup(username, password, dateOfBirth, weight, address)
       .subscribe(
-        (responseData) => {
-          // console.log(responseData);
+        () => {
           this.isLoading = false;
           this.router.navigate(['home']);
         },

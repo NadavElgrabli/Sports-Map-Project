@@ -1,9 +1,12 @@
+@import '../../../../styles/variables';
+
+
 .friends-list-box {
   width: 250px;
   max-height: 250px;
   overflow-y: auto;
-  background-color: #f5f5f5;
-  border: 1px solid #ccc;
+  background-color: $friends-list-bg;
+  border: 1px solid $friends-list-border;
   padding: 10px;
   font-size: 14px;
 }
@@ -22,7 +25,7 @@
 
 .friends-list-box li {
   padding: 5px 0;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid $friends-list-seperator;
 }
 
 .friends-list-box li:last-child {
