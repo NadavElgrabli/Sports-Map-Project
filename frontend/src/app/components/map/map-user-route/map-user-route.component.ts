@@ -3,12 +3,14 @@ import {
   ElementRef,
   OnInit,
   OnDestroy,
+  AfterViewInit,
   ViewChild,
 } from '@angular/core';
 import { User } from '../../../models/user.model';
 import { AuthService } from '../../../services/auth.service';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import { Subscription, forkJoin } from 'rxjs';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { MapService } from '../../../services/map.service';
 import { UserService } from '../../../services/user.service';
 import { LOGGED_USER_TRAIL_COLOR } from '../../../shared/constants/trail.constants';
@@ -18,13 +20,14 @@ import { LOGGED_USER_TRAIL_COLOR } from '../../../shared/constants/trail.constan
   templateUrl: './map-user-route.component.html',
   styleUrls: ['./map-user-route.component.scss'],
 })
-export class MapUserRouteComponent implements OnInit, OnDestroy {
+export class MapUserRouteComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('mapContainer', { static: true }) mapContainer!: ElementRef;
 
   map!: mapboxgl.Map;
   loggedInUser!: User | null;
 
-  private userSub!: Subscription;
+  private viewInitialized = false;
+  private destroy$ = new Subject<void>();
 
   constructor(
     private authService: AuthService,
@@ -33,13 +36,19 @@ export class MapUserRouteComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.userSub = this.authService.user.subscribe((user) => {
+    this.authService.user.pipe(takeUntil(this.destroy$)).subscribe((user) => {
       this.loggedInUser = user;
-      if (user) {
-        //TODO: why does set timout work here? whatdoes it do behind the scenes? is it necessary? How is it related to single thread of browser
-        setTimeout(() => this.initMap(), 0);
+      if (user && this.viewInitialized) {
+        this.initMap();
       }
     });
+  }
+
+  ngAfterViewInit() {
+    this.viewInitialized = true;
+    if (this.loggedInUser) {
+      this.initMap();
+    }
   }
 
   private initMap() {
@@ -77,7 +86,9 @@ export class MapUserRouteComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    if (this.userSub) this.userSub.unsubscribe();
+    this.destroy$.next();
+    this.destroy$.complete();
+
     if (this.map) this.map.remove();
   }
 }

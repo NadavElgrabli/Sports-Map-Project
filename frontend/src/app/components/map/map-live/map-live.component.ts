@@ -6,7 +6,6 @@ import {
   ViewChild,
 } from '@angular/core';
 import { User } from '../../../models/user.model';
-import mapboxgl from 'mapbox-gl';
 import { AuthService } from '../../../services/auth.service';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { Subscription, interval, forkJoin } from 'rxjs';

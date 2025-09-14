@@ -1,9 +1,17 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { User } from '../../../models/user.model';
-import { interval, Subscription } from 'rxjs';
+import {
+  interval,
+  Subject,
+  EMPTY,
+  takeUntil,
+  switchMap,
+  startWith,
+} from 'rxjs';
 import { AuthService } from '../../../services/auth.service';
 import { FriendsService } from '../../../services/friends.service';
 import { GeoService } from '../../../services/geo.service';
+import { NEARBY_USERS_REFRESH_INTERVAL_MS } from '../../../shared/constants/time.constants';
 
 @Component({
   selector: 'app-map-notifications',
@@ -13,12 +21,9 @@ import { GeoService } from '../../../services/geo.service';
 export class MapNotificationsComponent implements OnInit, OnDestroy {
   loggedInUser!: User | null;
   nearByUsers: User[] = [];
-
-  //TODO: we dont save subscriptions, find another way to unsubscribe
-  userSub!: Subscription;
-  intervalSub!: Subscription;
-
   radius: number = 1;
+
+  private destroy$ = new Subject<void>();
 
   constructor(
     private authService: AuthService,
@@ -27,40 +32,44 @@ export class MapNotificationsComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.userSub = this.authService.user.subscribe((user) => {
-      this.loggedInUser = user;
+    this.authService.user
+      .pipe(
+        takeUntil(this.destroy$),
+        switchMap((user) => {
+          this.loggedInUser = user;
 
-      if (user) {
-        this.updateNearbyUsers();
+          if (!user) return EMPTY; // no user, stop here
 
-        //TODO: put into a const
-        this.intervalSub = interval(5000).subscribe(() =>
-          this.updateNearbyUsers()
-        );
-      }
-    });
+          return interval(NEARBY_USERS_REFRESH_INTERVAL_MS).pipe(
+            startWith(0) // immediately trigger first update
+          );
+        })
+      )
+      .subscribe(() => this.updateNearbyUsers());
   }
 
   updateNearbyUsers() {
-    //TODO: uncessecary check
     if (!this.loggedInUser) return;
 
     this.friendsService
       .getFriends(this.loggedInUser.id)
       .subscribe((friends) => {
-        // TODO: dont use short names, write the full loggedLattitude
-        const loggedLat = Number(this.loggedInUser!.currentLocation.latitude);
-        const loggedLng = Number(this.loggedInUser!.currentLocation.longitude);
+        const loggedLatitude = Number(
+          this.loggedInUser!.currentLocation.latitude
+        );
+        const loggedLongitude = Number(
+          this.loggedInUser!.currentLocation.longitude
+        );
 
         this.nearByUsers = friends.filter((u) => {
-          const userLat = Number(u.currentLocation.latitude);
-          const userLng = Number(u.currentLocation.longitude);
+          const userLatitude = Number(u.currentLocation.latitude);
+          const userLongitude = Number(u.currentLocation.longitude);
 
           const distance = this.geoService.getDistance(
-            loggedLat,
-            loggedLng,
-            userLat,
-            userLng
+            loggedLatitude,
+            loggedLongitude,
+            userLatitude,
+            userLongitude
           );
 
           return distance <= this.radius;
@@ -69,7 +78,7 @@ export class MapNotificationsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    if (this.userSub) this.userSub.unsubscribe();
-    if (this.intervalSub) this.intervalSub.unsubscribe();
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
