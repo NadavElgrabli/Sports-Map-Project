@@ -37,12 +37,8 @@ export class MapNotificationsComponent implements OnInit, OnDestroy {
         takeUntil(this.destroy$),
         switchMap((user) => {
           this.loggedInUser = user;
-
-          if (!user) return EMPTY; // no user, stop here
-
-          return interval(NEARBY_USERS_REFRESH_INTERVAL_MS).pipe(
-            startWith(0) // immediately trigger first update
-          );
+          if (!user) return EMPTY;
+          return interval(NEARBY_USERS_REFRESH_INTERVAL_MS).pipe(startWith(0));
         })
       )
       .subscribe(() => this.updateNearbyUsers());

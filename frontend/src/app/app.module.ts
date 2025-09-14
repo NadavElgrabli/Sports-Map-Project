@@ -11,10 +11,9 @@ import { HomePageComponent } from './components/home-page/home-page.component';
 import { LoginFormComponent } from './components/login-form/login-form.component';
 import { SignupFormComponent } from './components/signup-form/signup-form.component';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
-import { LoadingSpinnerComponent } from './shared/loading-spinner/loading-spinner.component';
 import { SharedModule } from './shared/shared.module';
+import { MaterialModule } from './shared/material.module';
 
-//TODO (DONE): seperate imports of angular from the rest
 
 @NgModule({
   declarations: [
@@ -33,6 +32,7 @@ import { SharedModule } from './shared/shared.module';
     ReactiveFormsModule,
     HttpClientModule,
     SharedModule,
+    MaterialModule
   ],
   providers: [],
   bootstrap: [AppComponent],

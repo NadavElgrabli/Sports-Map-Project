@@ -1,9 +1,11 @@
+@import '../../../../styles/variables';
+
 .notifications-box {
   width: 250px;
   max-height: 200px;
   overflow-y: auto;
-  background-color: #f5f5f5;
-  border: 1px solid #ccc;
+  background-color: $notifications-bg;
+  border: 1px solid $notifications-border;
   padding: 10px;
   font-size: 14px;
 }
