@@ -8,12 +8,13 @@ import { sortByName } from '../shared/handlers/sort-by-name.handler';
 import { sortByWeight } from '../shared/handlers/sort-by-weight.handler';
 import { sortByDistance } from '../shared/handlers/sort-by-distance.handler';
 import { environment } from '../../environments/environment';
+import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class FriendsService {
   constructor(private http: HttpClient, private geoService: GeoService) {}
 
-  getFriends(userId: number) {
+  getFriends(userId: number): Observable<User[]> {
     return this.http.get<User[]>(
       `${environment.apiUrl}/users/${userId}/friends`
     );

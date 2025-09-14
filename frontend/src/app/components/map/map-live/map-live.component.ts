@@ -16,8 +16,16 @@ import {
   FRIEND_LINE_COLOR,
   LOGGED_USER_TRAIL_COLOR,
 } from '../../../shared/constants/trail.constants';
+import {
+  MEDIA_TYPE_VIDEO,
+  MEDIA_TYPE_IMAGE,
+  VIDEO_EXTENSION_MP4,
+} from '../../../shared/constants/media-types.constants';
 import { environment } from '../../../../environments/environment';
 import { NEARBY_USERS_REFRESH_INTERVAL_MS } from '../../../shared/constants/time.constants';
+import { UserService } from '../../../services/user.service';
+import { FriendsService } from '../../../services/friends.service';
+import { TrailService } from '../../../services/trail.service';
 
 @Component({
   selector: 'app-map-live',
@@ -37,7 +45,10 @@ export class MapLiveComponent implements OnInit, OnDestroy {
   constructor(
     private authService: AuthService,
     private http: HttpClient,
-    private mapService: MapService
+    private mapService: MapService,
+    private userService: UserService,
+    private friendsService: FriendsService,
+    private trailService: TrailService
   ) {}
 
   ngOnInit() {
@@ -90,14 +101,9 @@ export class MapLiveComponent implements OnInit, OnDestroy {
   private updateUsers() {
     this.mapService.clearUserMarkers();
 
-    //TODO: avoid http calls from withing components, only call http calls from services.
     forkJoin([
-      this.http.get<User>(
-        `${environment.apiUrl}/users/${this.loggedInUser!.id}`
-      ),
-      this.http.get<User[]>(
-        `${environment.apiUrl}/users/${this.loggedInUser!.id}/friends`
-      ),
+      this.userService.getUserById(this.loggedInUser!.id),
+      this.friendsService.getFriends(this.loggedInUser!.id),
     ]).subscribe(([currentUser, friends]) => {
       this.addOrUpdateMarker(currentUser);
       this.mapService.drawTrail(currentUser, LOGGED_USER_TRAIL_COLOR);
@@ -119,19 +125,17 @@ export class MapLiveComponent implements OnInit, OnDestroy {
     const url = prompt('Enter image/video URL for this location:');
     if (!url) return;
 
-    //TODO: every repetitive string should go into a const (video, image, .mp4) basically every string you have technical work with
-    const type = url.endsWith('.mp4') ? 'video' : 'image';
+    const type = url.endsWith(VIDEO_EXTENSION_MP4)
+      ? MEDIA_TYPE_VIDEO
+      : MEDIA_TYPE_IMAGE;
 
-    //TODO: no http requests inside components, only services
-    this.http
-      .post<TrailPoint>(
-        `${environment.apiUrl}/users/${this.loggedInUser!.id}/trail/media`,
-        {
-          latitude: e.lngLat.lat,
-          longitude: e.lngLat.lng,
-          url: url,
-          type: type,
-        }
+    this.trailService
+      .addMediaToTrail(
+        this.loggedInUser!.id,
+        e.lngLat.lat,
+        e.lngLat.lng,
+        url,
+        type
       )
       .subscribe(() => {
         //TODO: dont work with alert, only angular material dialogue
