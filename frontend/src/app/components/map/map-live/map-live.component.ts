@@ -97,12 +97,12 @@ export class MapLiveComponent implements OnInit, OnDestroy {
       ),
     ]).subscribe(([currentUser, friends]) => {
       this.addOrUpdateMarker(currentUser);
-      this.mapService.drawTrail(currentUser, '#007bff');
+      this.mapService.drawTrail(currentUser, '#007bff'); //TODO: use consts
       this.mapService.drawMediaMarkers(currentUser);
 
       friends.forEach((friend) => {
         this.addOrUpdateMarker(friend);
-        this.mapService.drawTrail(friend, '#ff0000');
+        this.mapService.drawTrail(friend, '#ff0000'); //TODO: use consts
         this.mapService.drawMediaMarkers(friend);
       });
     });

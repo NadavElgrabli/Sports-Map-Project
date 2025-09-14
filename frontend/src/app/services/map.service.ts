@@ -21,7 +21,7 @@ import {
 import {
   LINE_STRING_TYPE,
   TRAIL_LINE_WIDTH,
-  TRAIL_LINE_COLOR,
+  FRIEND_LINE_COLOR,
   TRAIL_LINE_JOIN,
   TRAIL_LINE_CAP,
 } from '../shared/constants/trail.constants';
@@ -130,7 +130,7 @@ export class MapService {
         source: sourceId,
         layout: { 'line-join': TRAIL_LINE_JOIN, 'line-cap': TRAIL_LINE_CAP },
         paint: {
-          'line-color': color ?? TRAIL_LINE_COLOR,
+          'line-color': color ?? FRIEND_LINE_COLOR,
           'line-width': TRAIL_LINE_WIDTH,
         },
       });
