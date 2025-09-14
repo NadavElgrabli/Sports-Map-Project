@@ -27,6 +27,7 @@ export class MapUserRouteComponent implements OnInit, AfterViewInit, OnDestroy {
   loggedInUser!: User | null;
 
   private viewInitialized = false;
+  private mapInitialized = false;
   private destroy$ = new Subject<void>();
 
   constructor(
@@ -39,7 +40,7 @@ export class MapUserRouteComponent implements OnInit, AfterViewInit, OnDestroy {
     this.authService.user.pipe(takeUntil(this.destroy$)).subscribe((user) => {
       this.loggedInUser = user;
       if (user && this.viewInitialized) {
-        this.initMap();
+        this.tryInitMap();
       }
     });
   }
@@ -47,7 +48,7 @@ export class MapUserRouteComponent implements OnInit, AfterViewInit, OnDestroy {
   ngAfterViewInit() {
     this.viewInitialized = true;
     if (this.loggedInUser) {
-      this.initMap();
+      this.tryInitMap();
     }
   }
 
@@ -68,6 +69,13 @@ export class MapUserRouteComponent implements OnInit, AfterViewInit, OnDestroy {
     );
 
     this.map = this.mapService.getMap();
+  }
+
+  private tryInitMap() {
+    if (!this.mapInitialized && this.loggedInUser && this.viewInitialized) {
+      this.mapInitialized = true;
+      this.initMap();
+    }
   }
 
   private updateUser() {

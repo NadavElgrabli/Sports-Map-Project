@@ -8,10 +8,16 @@ import {
 import { User } from '../../../models/user.model';
 import { AuthService } from '../../../services/auth.service';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import { Subscription, interval, forkJoin } from 'rxjs';
+import { interval, forkJoin, Subject, takeUntil } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { TrailPoint } from '../../../interfaces/trail-point.interface';
 import { MapService } from '../../../services/map.service';
+import {
+  FRIEND_LINE_COLOR,
+  LOGGED_USER_TRAIL_COLOR,
+} from '../../../shared/constants/trail.constants';
+import { environment } from '../../../../environments/environment';
+import { NEARBY_USERS_REFRESH_INTERVAL_MS } from '../../../shared/constants/time.constants';
 
 @Component({
   selector: 'app-map-live',
@@ -21,11 +27,12 @@ import { MapService } from '../../../services/map.service';
 export class MapLiveComponent implements OnInit, OnDestroy {
   @ViewChild('mapContainer', { static: true }) mapContainer!: ElementRef;
 
-  private userSub!: Subscription;
-  private updateIntervalSub!: Subscription;
-
   map!: mapboxgl.Map;
   loggedInUser!: User | null;
+
+  private viewInitialized = false;
+  private mapInitialized = false;
+  private destroy$ = new Subject<void>();
 
   constructor(
     private authService: AuthService,
@@ -34,45 +41,38 @@ export class MapLiveComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.userSub = this.authService.user.subscribe((user) => {
+    this.authService.user.pipe(takeUntil(this.destroy$)).subscribe((user) => {
       this.loggedInUser = user;
-      if (user) {
-        //make sure that when initmap is called the map container exists in DOM
-        setTimeout(() => this.initMap(), 0);
+      if (user && this.viewInitialized) {
+        this.tryInitMap();
       }
     });
   }
 
-  ngOnDestroy() {
-    if (this.userSub) this.userSub.unsubscribe();
-    if (this.updateIntervalSub) this.updateIntervalSub.unsubscribe();
-    if (this.map) this.map.remove();
+  ngAfterViewInit() {
+    this.viewInitialized = true;
+    if (this.loggedInUser) {
+      this.tryInitMap();
+    }
   }
 
   private initMap() {
     if (!this.loggedInUser) return;
 
     this.mapService.initMap(
-      //The HTML <div> where the map is rendered
       this.mapContainer.nativeElement,
-
-      //center
       [
         this.loggedInUser.currentLocation.longitude,
         this.loggedInUser.currentLocation.latitude,
       ],
-
-      //right click handler to add image / video
       (e) => this.addMediaPrompt(e),
-
-      //on load, runs after map loads
       () => {
         this.addOrUpdateMarker(this.loggedInUser!);
-
-        this.updateIntervalSub = interval(5000).subscribe(() => {
-          this.updateUsers();
-        });
-
+        interval(NEARBY_USERS_REFRESH_INTERVAL_MS)
+          .pipe(takeUntil(this.destroy$))
+          .subscribe(() => {
+            this.updateUsers();
+          });
         this.updateUsers();
       }
     );
@@ -80,57 +80,57 @@ export class MapLiveComponent implements OnInit, OnDestroy {
     this.map = this.mapService.getMap();
   }
 
+  private tryInitMap() {
+    if (!this.mapInitialized && this.loggedInUser && this.viewInitialized) {
+      this.mapInitialized = true;
+      this.initMap();
+    }
+  }
+
   private updateUsers() {
-    if (!this.loggedInUser) return;
-
-    // Clear previous markers (both user markers and media markers)
     this.mapService.clearUserMarkers();
-    // this.mapService.clearMediaMarkers();
 
+    //TODO: avoid http calls from withing components, only call http calls from services.
     forkJoin([
       this.http.get<User>(
-        `http://localhost:5202/api/users/${this.loggedInUser.id}`
+        `${environment.apiUrl}/users/${this.loggedInUser!.id}`
       ),
       this.http.get<User[]>(
-        `http://localhost:5202/api/users/${this.loggedInUser.id}/friends`
+        `${environment.apiUrl}/users/${this.loggedInUser!.id}/friends`
       ),
     ]).subscribe(([currentUser, friends]) => {
       this.addOrUpdateMarker(currentUser);
-      this.mapService.drawTrail(currentUser, '#007bff'); //TODO: use consts
+      this.mapService.drawTrail(currentUser, LOGGED_USER_TRAIL_COLOR);
       this.mapService.drawMediaMarkers(currentUser);
 
       friends.forEach((friend) => {
         this.addOrUpdateMarker(friend);
-        this.mapService.drawTrail(friend, '#ff0000'); //TODO: use consts
+        this.mapService.drawTrail(friend, FRIEND_LINE_COLOR);
         this.mapService.drawMediaMarkers(friend);
       });
     });
   }
 
   private addOrUpdateMarker(user: User) {
-    if (!this.loggedInUser) return;
-
     this.mapService.addOrUpdateMarker(user, user.id === this.loggedInUser?.id);
   }
 
   private addMediaPrompt(e: mapboxgl.MapMouseEvent) {
-    if (!this.loggedInUser) return;
-
     const url = prompt('Enter image/video URL for this location:');
     if (!url) return;
 
     //TODO: every repetitive string should go into a const (video, image, .mp4) basically every string you have technical work with
     const type = url.endsWith('.mp4') ? 'video' : 'image';
 
-    //TODO: add ": name" for example: isntead of url, -> "url : url"
+    //TODO: no http requests inside components, only services
     this.http
       .post<TrailPoint>(
-        `http://localhost:5202/api/users/${this.loggedInUser.id}/trail/media`,
+        `${environment.apiUrl}/users/${this.loggedInUser!.id}/trail/media`,
         {
           latitude: e.lngLat.lat,
           longitude: e.lngLat.lng,
-          url,
-          type,
+          url: url,
+          type: type,
         }
       )
       .subscribe(() => {
@@ -138,5 +138,11 @@ export class MapLiveComponent implements OnInit, OnDestroy {
         alert('Media added!');
         this.updateUsers();
       });
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+    if (this.map) this.map.remove();
   }
 }
