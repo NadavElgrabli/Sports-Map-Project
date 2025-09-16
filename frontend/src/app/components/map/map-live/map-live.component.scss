@@ -6,19 +6,19 @@
 }
 
 :host ::ng-deep .marker-logged-in {
-  width: 10px;
-  height: 10px;
+  width: $map-live-user-size;
+  height: $map-live-user-size;
   background-color: $map-live-logged-in-user-color;
   border-radius: 50%;
   border: 2px solid $map-live-user-border;
-  box-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 3px $map-live-user-shadow;
 }
 
 :host ::ng-deep .marker-friend {
-  width: 10px;
-  height: 10px;
+  width: $map-live-user-size;
+  height: $map-live-user-size;
   background-color: $map-live-logged-in-user-friend-color;
   border-radius: 50%;
   border: 2px solid $map-live-user-border;
-  box-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 3px $map-live-user-shadow;
 }

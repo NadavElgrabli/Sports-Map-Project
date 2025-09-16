@@ -19,10 +19,16 @@ import {
   MEDIA_TYPE_IMAGE,
   VIDEO_EXTENSION_MP4,
 } from '../../../shared/constants/media-types.constants';
-import { NEARBY_USERS_REFRESH_INTERVAL_MS } from '../../../shared/constants/time.constants';
+import {
+  NEARBY_USERS_REFRESH_INTERVAL_MS,
+  MEDIA_ADDED_SNACKBAR_DURATION_MS,
+} from '../../../shared/constants/time.constants';
 import { UserService } from '../../../services/user.service';
 import { FriendsService } from '../../../services/friends.service';
 import { TrailService } from '../../../services/trail.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
+import { AddMediaDialogComponent } from '../../../shared/add-media-dialog/add-media-dialog.component';
 
 @Component({
   selector: 'app-map-live',
@@ -44,7 +50,9 @@ export class MapLiveComponent implements OnInit, OnDestroy {
     private mapService: MapService,
     private userService: UserService,
     private friendsService: FriendsService,
-    private trailService: TrailService
+    private trailService: TrailService,
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit() {
@@ -72,7 +80,7 @@ export class MapLiveComponent implements OnInit, OnDestroy {
         this.loggedInUser.currentLocation.longitude,
         this.loggedInUser.currentLocation.latitude,
       ],
-      (e) => this.addMediaPrompt(e),
+      (e) => this.openAddMediaDialog(e),
       () => {
         this.addOrUpdateMarker(this.loggedInUser!);
         interval(NEARBY_USERS_REFRESH_INTERVAL_MS)
@@ -117,27 +125,35 @@ export class MapLiveComponent implements OnInit, OnDestroy {
     this.mapService.addOrUpdateMarker(user, user.id === this.loggedInUser?.id);
   }
 
-  private addMediaPrompt(e: mapboxgl.MapMouseEvent) {
-    const url = prompt('Enter image/video URL for this location:');
-    if (!url) return;
+  private openAddMediaDialog(e: mapboxgl.MapMouseEvent) {
+    const dialogRef = this.dialog.open(AddMediaDialogComponent, {
+      width: '400px',
+    });
 
-    const type = url.endsWith(VIDEO_EXTENSION_MP4)
-      ? MEDIA_TYPE_VIDEO
-      : MEDIA_TYPE_IMAGE;
+    dialogRef.afterClosed().subscribe((url: string) => {
+      if (!url || !this.loggedInUser) return;
 
-    this.trailService
-      .addMediaToTrail(
-        this.loggedInUser!.id,
-        e.lngLat.lat,
-        e.lngLat.lng,
-        url,
-        type
-      )
-      .subscribe(() => {
-        //TODO: dont work with alert, only angular material dialogue
-        alert('Media added!');
-        this.updateUsers();
-      });
+      const type = url.endsWith(VIDEO_EXTENSION_MP4)
+        ? MEDIA_TYPE_VIDEO
+        : MEDIA_TYPE_IMAGE;
+
+      this.trailService
+        .addMediaToTrail(
+          this.loggedInUser.id,
+          e.lngLat.lat,
+          e.lngLat.lng,
+          url,
+          type
+        )
+        .subscribe(() => {
+          this.snackBar.open('Media added!', 'Close', {
+            duration: MEDIA_ADDED_SNACKBAR_DURATION_MS,
+            horizontalPosition: 'left',
+            verticalPosition: 'bottom',
+          });
+          this.updateUsers();
+        });
+    });
   }
 
   ngOnDestroy() {

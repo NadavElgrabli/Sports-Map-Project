@@ -1,0 +1,11 @@
+<h2 mat-dialog-title>Add Media</h2>
+<mat-dialog-content>
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Image or Video URL</mat-label>
+    <input matInput [(ngModel)]="url" />
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="_onCancel()">Cancel</button>
+  <button mat-raised-button color="primary" [disabled]="!url" (click)="_onAdd()">Add</button>
+</mat-dialog-actions>
