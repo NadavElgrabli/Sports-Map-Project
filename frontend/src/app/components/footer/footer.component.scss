@@ -1,1 +1,9 @@
+@import '../../../styles/variables';
 
+.footer-toolbar {
+  background-color: $footer-bg-color; 
+  color: $footer-text-color;
+  justify-content: center;
+  font-size: 14px;
+  padding: 10px 0;
+}

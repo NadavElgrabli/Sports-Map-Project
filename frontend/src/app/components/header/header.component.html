@@ -1,4 +1,22 @@
-<header>
+<mat-toolbar class="header-toolbar">
+  <div class="left-menu">
+    <a mat-button routerLink="/">Home</a>
+    <a mat-button *ngIf="isAuthenticated" [routerLink]="['/map', userId]"
+      >Map</a
+    >
+  </div>
+
+  <span class="center-menu" *ngIf="isAuthenticated">
+    Welcome, {{ username }}!
+  </span>
+
+  <div class="right-menu">
+    <a mat-button *ngIf="!isAuthenticated" routerLink="/login">Login</a>
+    <a mat-button *ngIf="isAuthenticated" (click)="_onLogout()">Logout</a>
+  </div>
+</mat-toolbar>
+
+<!-- <header>
   <nav class="header-container">
     <ul>
       <li><a routerLink="/">Home</a></li>
@@ -18,4 +36,4 @@
       </li>
     </ul>
   </nav>
-</header>
+</header> -->

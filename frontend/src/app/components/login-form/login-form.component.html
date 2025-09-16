@@ -5,7 +5,11 @@
     <app-loading-spinner></app-loading-spinner>
   </div>
 
-  <form *ngIf="!isLoading" #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)">
+  <form
+    *ngIf="!isLoading"
+    #loginForm="ngForm"
+    (ngSubmit)="_onSubmit(loginForm)"
+  >
     <mat-form-field appearance="outline" class="full-width">
       <mat-label>Username</mat-label>
       <input matInput type="text" name="userName" ngModel required />

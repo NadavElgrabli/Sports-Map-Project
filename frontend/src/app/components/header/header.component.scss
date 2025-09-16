@@ -1,42 +1,80 @@
-.header-container {
+@import '../../../styles/variables';
+
+.header-toolbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 30px;
-  background-color: rgb(230, 230, 230); 
-  font-size: 1.1rem; 
-  font-family: Arial, Helvetica, sans-serif; 
-}
-
-.header-container ul {
-  display: flex;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.header-container li {
-  margin: 0 18px;
-}
-
-.header-container a,
-.header-container .logout-link {
-  font-weight: bold;
-  text-decoration: none;
-  color: black;
-  cursor: pointer;
-  transition: color 0.2s ease;
-}
-
-.header-container a:hover,
-.header-container .logout-link:hover {
-  color: rgb(0, 102, 204); 
-}
-
-.center-menu {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  font-weight: bold;
+  background-color: $header-background-color;
+  padding: 0 20px;
   font-size: 1.1rem;
+
+  .left-menu,
+  .right-menu {
+    display: flex;
+
+    a {
+      font-size: 16px;
+      margin: 0 12px;
+      text-decoration: none;
+      color: $header-text-color;
+      transition: color 0.2s ease;
+
+      &:hover {
+        color: $header-hover-color;
+      }
+    }
+  }
+
+  .center-menu {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    color: $header-text-color;
+  }
 }
+
+
+
+
+// .header-container {
+//   display: flex;
+//   justify-content: space-between;
+//   align-items: center;
+//   padding: 12px 30px;
+//   background-color: rgb(230, 230, 230); 
+//   font-size: 1.1rem; 
+//   font-family: Arial, Helvetica, sans-serif; 
+// }
+
+// .header-container ul {
+//   display: flex;
+//   list-style: none;
+//   margin: 0;
+//   padding: 0;
+// }
+
+// .header-container li {
+//   margin: 0 18px;
+// }
+
+// .header-container a,
+// .header-container .logout-link {
+//   font-weight: bold;
+//   text-decoration: none;
+//   color: black;
+//   cursor: pointer;
+//   transition: color 0.2s ease;
+// }
+
+// .header-container a:hover,
+// .header-container .logout-link:hover {
+//   color: rgb(0, 102, 204); 
+// }
+
+// .center-menu {
+//   position: absolute;
+//   left: 50%;
+//   transform: translateX(-50%);
+//   font-weight: bold;
+//   font-size: 1.1rem;
+// }

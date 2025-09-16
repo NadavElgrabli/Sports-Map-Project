@@ -15,7 +15,7 @@ export class LoginFormComponent {
 
   constructor(private authService: AuthService, private router: Router) {}
 
-  onSubmit(form: NgForm) {
+  _onSubmit(form: NgForm) {
     const username = form.value.userName;
     const password = form.value.password;
 
