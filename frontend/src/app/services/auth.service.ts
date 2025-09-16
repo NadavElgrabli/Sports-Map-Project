@@ -18,7 +18,9 @@ export class AuthService {
     private http: HttpClient,
     private router: Router,
     private localStorageService: LocalStorageService
-  ) {}
+  ) {
+    this.autoLogin(); // <-- call autoLogin automatically on service init
+  }
 
   signup(
     username: string,
@@ -28,19 +30,19 @@ export class AuthService {
     address: string
   ) {
     return this.http.post<UserResponse>(`${environment.apiUrl}/users/signup`, {
-      username: username,
-      password: password,
-      dateOfBirth: dateOfBirth,
-      weight: weight,
-      address: address,
+      username,
+      password,
+      dateOfBirth,
+      weight,
+      address,
     });
   }
 
   login(username: string, password: string) {
     return this.http
       .post<LoginResponseData>(`${environment.apiUrl}/users/login`, {
-        username: username,
-        password: password,
+        username,
+        password,
       })
       .pipe(
         tap((resData) => {
@@ -59,13 +61,6 @@ export class AuthService {
             resData.user.currentLocation,
             resData.user.friends
           );
-
-          //TODO: read the differences between type / class/ interface (should this should be type? understand why)
-          //TODO: This option below is better, do it that way (i am lazy but it should be type, i made a short example for you. You must know the difference between type and const and when to use each)
-          // const loggedUser2 = {
-          //   ...resData.user,
-          //   expirationDate: expirationDate,
-          // };
 
           this.user.next(loggedUser);
           this.localStorageService.setUser(loggedUser);
