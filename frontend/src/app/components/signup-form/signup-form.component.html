@@ -2,11 +2,14 @@
   <div>
     <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
   </div>
+
   <form *ngIf="!isLoading" [formGroup]="signupForm" (ngSubmit)="_onSubmit()">
     <div>
       <label for="username">Username:</label>
+
       <input type="text" id="username" formControlName="username" />
     </div>
+
     <div>
       <span *ngIf="!usernameAvailable" class="error"
         >Username is not available, please pick a different username.</span
@@ -15,16 +18,19 @@
 
     <div>
       <label for="password">Password:</label>
+
       <input type="password" id="password" formControlName="password" />
     </div>
 
     <div>
       <label for="dateOfBirth">Date Of Birth:</label>
+
       <input
         type="datetime-local"
         id="dateOfBirth"
         formControlName="dateOfBirth"
       />
+
       <div>
         <span
           *ngIf="signupForm.get('dateOfBirth')?.hasError('evenMonth')"
@@ -37,13 +43,16 @@
 
     <div>
       <label for="weight">Weight (kg):</label>
+
       <input type="number" id="weight" formControlName="weight" />
     </div>
 
     <div>
       <label for="address">Address:</label>
+
       <select id="address" formControlName="address">
         <option value="">--Select address--</option>
+
         <option *ngFor="let addr of addresses" [value]="addr">
           {{ addr }}
         </option>
