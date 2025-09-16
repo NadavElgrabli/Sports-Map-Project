@@ -1,4 +1,21 @@
-<div class="notifications-box">
+<mat-card class="notifications-box">
+  <mat-card-title>Nearby Friends ({{ radius }} km)</mat-card-title>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Radius (km)</mat-label>
+    <input matInput type="number" [(ngModel)]="radius" min="0.5" step="0.5" />
+  </mat-form-field>
+
+  <mat-list *ngIf="nearByUsers.length > 0">
+    <mat-list-item *ngFor="let user of nearByUsers">
+      <h4 matLine>{{ user.username }}</h4>
+    </mat-list-item>
+  </mat-list>
+
+  <p *ngIf="nearByUsers.length === 0">No friends nearby.</p>
+</mat-card>
+
+<!-- <div class="notifications-box">
   <h4>Nearby Friends ({{ radius }} km)</h4>
 
   <label>
@@ -6,7 +23,6 @@
     <input type="number" [(ngModel)]="radius" min="0.5" step="0.5" />
   </label>
 
-  <!-- TODO: work with angular material -->
   <ul>
     <li *ngFor="let user of nearByUsers">
       {{ user.username }}
@@ -14,4 +30,4 @@
   </ul>
 
   <p *ngIf="nearByUsers.length === 0">No friends nearby.</p>
-</div>
+</div> -->

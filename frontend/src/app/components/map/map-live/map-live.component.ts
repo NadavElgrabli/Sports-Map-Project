@@ -9,8 +9,6 @@ import { User } from '../../../models/user.model';
 import { AuthService } from '../../../services/auth.service';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { interval, forkJoin, Subject, takeUntil } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
-import { TrailPoint } from '../../../interfaces/trail-point.interface';
 import { MapService } from '../../../services/map.service';
 import {
   FRIEND_LINE_COLOR,
@@ -21,7 +19,6 @@ import {
   MEDIA_TYPE_IMAGE,
   VIDEO_EXTENSION_MP4,
 } from '../../../shared/constants/media-types.constants';
-import { environment } from '../../../../environments/environment';
 import { NEARBY_USERS_REFRESH_INTERVAL_MS } from '../../../shared/constants/time.constants';
 import { UserService } from '../../../services/user.service';
 import { FriendsService } from '../../../services/friends.service';
@@ -44,7 +41,6 @@ export class MapLiveComponent implements OnInit, OnDestroy {
 
   constructor(
     private authService: AuthService,
-    private http: HttpClient,
     private mapService: MapService,
     private userService: UserService,
     private friendsService: FriendsService,

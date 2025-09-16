@@ -2,8 +2,8 @@
 
 
 .friends-list-box {
-  width: 250px;
-  max-height: 250px;
+  width: $map-friends-list-box-size;
+  max-height: $map-friends-list-box-size;
   overflow-y: auto;
   background-color: $friends-list-bg;
   border: 1px solid $friends-list-border;

@@ -10,6 +10,7 @@ import { MapLiveComponent } from './map-live/map-live.component';
 import { MapNotificationsComponent } from './map-notifications/map-notifications.component';
 import { MapFriendsListComponent } from './map-friends-list/map-friends-list.component';
 import { MapUserRouteComponent } from './map-user-route/map-user-route.component';
+import { MaterialModule } from '../../shared/material.module';
 
 @NgModule({
   declarations: [
@@ -19,6 +20,6 @@ import { MapUserRouteComponent } from './map-user-route/map-user-route.component
     MapFriendsListComponent,
     MapUserRouteComponent,
   ],
-  imports: [CommonModule, FormsModule, SharedModule, MapRoutingModule],
+  imports: [CommonModule, FormsModule, SharedModule, MapRoutingModule, MaterialModule],
 })
 export class MapModule {}

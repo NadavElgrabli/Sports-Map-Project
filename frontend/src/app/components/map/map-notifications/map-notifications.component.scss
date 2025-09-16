@@ -1,11 +1,16 @@
 @import '../../../../styles/variables';
 
 .notifications-box {
-  width: 250px;
-  max-height: 200px;
+  width: $map-notifications-box-size;
+  max-height: $map-notifications-box-size;
   overflow-y: auto;
   background-color: $notifications-bg;
   border: 1px solid $notifications-border;
   padding: 10px;
-  font-size: 14px;
+
+  mat-card-title {
+    margin-bottom: 12px;
+    display: block; 
+  }
 }
+

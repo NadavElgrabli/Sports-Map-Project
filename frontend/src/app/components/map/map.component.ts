@@ -18,10 +18,9 @@ export class MapComponent {
     });
   }
 
-  goToUserRoute() {
+  _goToUserRoute() {
     if (this.viewedUserId) {
-      //TODO: inside navigate you can use ',' to seperate the url words
-      this.router.navigate([`/map/${this.viewedUserId}/trail`]);
+      this.router.navigate(['map', this.viewedUserId, 'trail']);
     }
   }
 }
