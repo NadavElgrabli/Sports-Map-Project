@@ -1,8 +1,8 @@
 @import '../../../../styles/variables';
 
 .friends-list-box {
-  width: $map-friends-list-box-size;
-  max-height: $map-friends-list-box-size;
+  width: $friends-list-width-size;
+  max-height: $friends-list-height-size;
   overflow-y: auto;
   background-color: $friends-list-bg;
   border: 1px solid $friends-list-border;
