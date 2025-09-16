@@ -1,59 +1,123 @@
 @import '../../../styles/variables';
 
-input.ng-invalid.ng-touched {
-  border: 1px solid $color-error;
-}
-
-form {
-  max-width: 350px;
+.signup-card {
+  max-width: 400px;
   margin: 50px auto;
   padding: 20px;
+  background-color: $signup-form-bg-color;
   border: 1px solid $signup-form-border-color;
   border-radius: 6px;
-  background-color: $signup-form-bg-color;
-  font-size: 16px;
 
-  label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: 500;
+  mat-card-title {
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 20px;
   }
 
-  input,
-  select {
+  .full-width {
     width: 100%;
-    padding: 8px;
-    font-size: 15px;
-    border: 1px solid $signup-form-border-color;
-    border-radius: 4px;
   }
 
-  div {
+  .dob-field {
     margin-bottom: 15px;
-  }
 
-  a {
-    color: $signup-form-link-color;
-    text-decoration: none;
+    label {
+      display: block;
+      font-weight: 500;
+      margin-bottom: 5px;
+    }
 
-    &:hover {
-      text-decoration: underline;
+    input {
+      width: 100%;
+      padding: 8px;
+      font-size: 15px;
+      border: 1px solid $signup-form-border-color;
+      border-radius: 4px;
+    }
+
+    .error {
+      color: $color-error;
+      font-size: 14px;
+      margin-top: 4px;
     }
   }
 
-  button {
-    width: 100%;
-    padding: 10px;
-    font-size: 16px;
-    border: none;
-    border-radius: 4px;
-    background-color: $signup-form-btn-enabled;
-    color: white;
-    cursor: pointer;
+  .login-label {
+    margin-top: 15px;
+    text-align: center;
 
-    &:disabled {
-      background-color: $signup-form-btn-disabled;
-      cursor: not-allowed;
+    a {
+      color: $signup-form-link-color;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
     }
   }
 }
+
+
+
+
+
+// @import '../../../styles/variables';
+
+// input.ng-invalid.ng-touched {
+//   border: 1px solid $color-error;
+// }
+
+// form {
+//   max-width: 350px;
+//   margin: 50px auto;
+//   padding: 20px;
+//   border: 1px solid $signup-form-border-color;
+//   border-radius: 6px;
+//   background-color: $signup-form-bg-color;
+//   font-size: 16px;
+
+//   label {
+//     display: block;
+//     margin-bottom: 5px;
+//     font-weight: 500;
+//   }
+
+//   input,
+//   select {
+//     width: 100%;
+//     padding: 8px;
+//     font-size: 15px;
+//     border: 1px solid $signup-form-border-color;
+//     border-radius: 4px;
+//   }
+
+//   div {
+//     margin-bottom: 15px;
+//   }
+
+//   a {
+//     color: $signup-form-link-color;
+//     text-decoration: none;
+
+//     &:hover {
+//       text-decoration: underline;
+//     }
+//   }
+
+//   button {
+//     width: 100%;
+//     padding: 10px;
+//     font-size: 16px;
+//     border: none;
+//     border-radius: 4px;
+//     background-color: $signup-form-btn-enabled;
+//     color: white;
+//     cursor: pointer;
+
+//     &:disabled {
+//       background-color: $signup-form-btn-disabled;
+//       cursor: not-allowed;
+//     }
+//   }
+// }

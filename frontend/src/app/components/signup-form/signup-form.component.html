@@ -1,4 +1,68 @@
-<div>
+<mat-card class="signup-card">
+  <mat-card-title>Sign Up</mat-card-title>
+
+  <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
+  <form *ngIf="!isLoading" [formGroup]="signupForm" (ngSubmit)="_onSubmit()">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Username</mat-label>
+      <input matInput type="text" formControlName="username" />
+      <mat-error *ngIf="!usernameAvailable">
+        Username is not available, please pick a different username.
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Password</mat-label>
+      <input matInput type="password" formControlName="password" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Date Of Birth</mat-label>
+      <input
+        matInput
+        type="datetime-local"
+        id="dateOfBirth"
+        formControlName="dateOfBirth"
+      />
+      <mat-error *ngIf="signupForm.get('dateOfBirth')?.hasError('evenMonth')">
+        Birth month cannot be even
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Weight (kg)</mat-label>
+      <input matInput type="number" formControlName="weight" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Address</mat-label>
+      <mat-select formControlName="address">
+        <mat-option value="">--Select address--</mat-option>
+        <mat-option *ngFor="let addr of addresses" [value]="addr">
+          {{ addr }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <button
+      mat-raised-button
+      color="primary"
+      type="submit"
+      class="full-width"
+      [disabled]="signupForm.invalid"
+    >
+      Submit
+    </button>
+
+    <div class="login-label">
+      Already have a user?
+      <a routerLink="/login">Click Here to log in!</a>
+    </div>
+  </form>
+</mat-card>
+
+<!-- <div>
   <div>
     <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
   </div>
@@ -68,4 +132,4 @@
       </label>
     </div>
   </form>
-</div>
+</div> -->
