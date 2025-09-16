@@ -12,5 +12,18 @@
     margin-bottom: 12px;
     display: block; 
   }
+
+    mat-list {
+    padding: 0;
+
+    mat-list-item {
+      padding: 5px 0;
+      border-bottom: 1px solid $friends-list-seperator;
+
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+  }
 }
 

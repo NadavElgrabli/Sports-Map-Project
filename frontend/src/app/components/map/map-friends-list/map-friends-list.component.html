@@ -1,4 +1,34 @@
-<div class="friends-list-box" *ngIf="loggedInUser">
+<mat-card class="friends-list-box" *ngIf="loggedInUser">
+  <mat-card-title
+    >Friends List (friends who are highlighted are nearby):</mat-card-title
+  >
+
+  <mat-form-field appearance="outline" class="sort-field">
+    <mat-label>Sort by</mat-label>
+    <mat-select [(value)]="sortBy" (selectionChange)="_sortFriends()">
+      <mat-option value="name">Name</mat-option>
+      <mat-option value="weight">Weight</mat-option>
+      <mat-option value="distance">Distance</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-list *ngIf="friends.length > 0">
+    <mat-list-item
+      *ngFor="let friend of friends"
+      [appCloseUsersHighlight]="_getDistanceToFriend(friend)"
+    >
+      {{ friend.username }}
+      <span *ngIf="sortBy === 'weight'"> - {{ friend.weight }}kg</span>
+      <span *ngIf="sortBy === 'distance'">
+        {{ _getDistanceToFriend(friend) | number : "1.0-1" }} km
+      </span>
+    </mat-list-item>
+  </mat-list>
+
+  <p *ngIf="friends.length === 0">No friends found.</p>
+</mat-card>
+
+<!-- <div class="friends-list-box" *ngIf="loggedInUser">
   <h4>Friends List (friends who are highlighted are nearby):</h4>
 
   <label>
@@ -25,4 +55,4 @@
   </ul>
 
   <p *ngIf="friends.length === 0">No friends found.</p>
-</div>
+</div> -->
