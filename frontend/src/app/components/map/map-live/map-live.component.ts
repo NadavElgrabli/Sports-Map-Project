@@ -18,6 +18,7 @@ import {
   MEDIA_TYPE_VIDEO,
   MEDIA_TYPE_IMAGE,
   VIDEO_EXTENSION_MP4,
+  MEDIA_DIALOG_WIDTH,
 } from '../../../shared/constants/media-types.constants';
 import {
   NEARBY_USERS_REFRESH_INTERVAL_MS,
@@ -127,7 +128,7 @@ export class MapLiveComponent implements OnInit, OnDestroy {
 
   private openAddMediaDialog(e: mapboxgl.MapMouseEvent) {
     const dialogRef = this.dialog.open(AddMediaDialogComponent, {
-      width: '400px',
+      width: MEDIA_DIALOG_WIDTH,
     });
 
     dialogRef.afterClosed().subscribe((url: string) => {
