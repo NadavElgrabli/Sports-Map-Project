@@ -1,4 +1,43 @@
-<div>
+<mat-card class="login-card">
+  <mat-card-title>Login</mat-card-title>
+
+  <div *ngIf="isLoading" class="spinner-container">
+    <app-loading-spinner></app-loading-spinner>
+  </div>
+
+  <form *ngIf="!isLoading" #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Username</mat-label>
+      <input matInput type="text" name="userName" ngModel required />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Password</mat-label>
+      <input matInput type="password" name="password" ngModel required />
+    </mat-form-field>
+
+    <button
+      mat-raised-button
+      color="primary"
+      type="submit"
+      [disabled]="!loginForm.valid"
+      class="full-width"
+    >
+      Submit
+    </button>
+
+    <div *ngIf="loginError" class="error">
+      {{ loginError }}
+    </div>
+
+    <div class="sign-up-label">
+      Don't have a user?
+      <a routerLink="/signup">Click Here to sign up!</a>
+    </div>
+  </form>
+</mat-card>
+
+<!-- <div>
   <div *ngIf="isLoading" class="spinner-container">
     <app-loading-spinner></app-loading-spinner>
   </div>
@@ -6,11 +45,13 @@
   <form *ngIf="!isLoading" (ngSubmit)="onSubmit(loginForm)" #loginForm="ngForm">
     <div>
       <label for="userName">Username</label>
+
       <input type="text" id="userName" ngModel name="userName" required />
     </div>
 
     <div>
       <label for="password">Password</label>
+
       <input type="password" id="password" ngModel name="password" required />
     </div>
 
@@ -19,6 +60,7 @@
     <div *ngIf="loginError" class="error">
       <span>username or password is incorrect!</span>
     </div>
+
     <div>
       <label class="sign-up-label">
         Don't have a user?
@@ -26,4 +68,4 @@
       </label>
     </div>
   </form>
-</div>
+</div> -->

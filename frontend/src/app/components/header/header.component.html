@@ -12,7 +12,7 @@
     </div>
 
     <ul>
-      <li *ngIf="!isAuthenticated"><a routerLink="login">Sign In</a></li>
+      <li *ngIf="!isAuthenticated"><a routerLink="login">Login</a></li>
       <li *ngIf="isAuthenticated">
         <a class="logout-link" (click)="_onLogout()">Logout</a>
       </li>
